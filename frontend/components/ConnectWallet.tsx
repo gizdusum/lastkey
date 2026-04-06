@@ -16,14 +16,16 @@ export default function ConnectWallet({
   const { disconnect } = useDisconnect();
   const { switchChainAsync, isPending: isSwitching } = useSwitchChain();
 
-  const baseClass = large ? "px-10 py-5 text-lg" : "px-5 py-2.5 text-sm";
+  const baseClass = large
+    ? "min-w-[220px] px-8 py-4 text-base sm:px-10 sm:py-5 sm:text-lg"
+    : "px-4 py-2.5 text-sm";
 
   if (!isConnected) {
     return (
       <button
         onClick={() => connectAsync({ connector: injected() })}
         disabled={isPending}
-        className={`rounded-full bg-amber-500 font-bold text-black transition-all duration-200 hover:bg-amber-400 disabled:opacity-60 ${baseClass}`}
+        className={`inline-flex shrink-0 items-center justify-center whitespace-nowrap rounded-full bg-amber-500 font-bold text-black transition-all duration-200 hover:bg-amber-400 disabled:opacity-60 ${baseClass}`}
       >
         {isPending ? "Connecting..." : "Connect Wallet"}
       </button>
@@ -43,7 +45,7 @@ export default function ConnectWallet({
   }
 
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex flex-wrap items-center justify-end gap-2">
       <div className="hidden rounded-full border border-slate-300 bg-white px-3 py-2 text-xs text-slate-600 sm:block">
         {chain?.name || "Etherlink Shadownet"}
       </div>

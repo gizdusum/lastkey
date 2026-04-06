@@ -25,9 +25,11 @@ body {
 
 body {
   background:
-    radial-gradient(circle at top, rgba(128, 180, 255, 0.18), transparent 28%),
-    linear-gradient(180deg, #f6fbff 0%, #edf3fb 18%, #142034 58%, #06070f 100%);
+    radial-gradient(circle at top, rgba(168, 205, 255, 0.22), transparent 26%),
+    radial-gradient(circle at 85% 18%, rgba(212, 168, 83, 0.1), transparent 18%),
+    linear-gradient(180deg, #f8fbff 0%, #eef4fb 20%, #1d2a3f 58%, #06070f 100%);
   color: var(--foreground);
+  overflow-x: hidden;
 }
 
 body::before {

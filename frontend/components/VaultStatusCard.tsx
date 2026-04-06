@@ -44,7 +44,7 @@ export default function VaultStatus({ address }: VaultStatusProps) {
 
   if (!status || !status[0]) {
     return (
-      <div className="mb-6 rounded-2xl border border-white/10 bg-white/5 p-6 text-center">
+      <div className="mb-6 rounded-[28px] border border-white/10 bg-white/5 p-6 text-center">
         <p className="text-sm text-slate-300">No continuity vault yet.</p>
         <p className="mt-1 text-xs text-slate-500">Create one below when you are ready.</p>
       </div>
@@ -99,12 +99,12 @@ export default function VaultStatus({ address }: VaultStatusProps) {
 
   return (
     <div
-      className={`mb-6 rounded-3xl border p-6 transition-all ${urgencyStyle.border} ${urgencyStyle.bg}`}
+      className={`mb-6 rounded-[28px] border p-6 transition-all ${urgencyStyle.border} ${urgencyStyle.bg}`}
     >
-      <div className="mb-5 flex items-center justify-between">
+      <div className="mb-5 flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-center">
         <div>
-          <h3 className="font-bold">LastKey Status</h3>
-          <p className="mt-0.5 text-xs text-slate-500">Locked balance: {balance} XTZ</p>
+          <h3 className="text-lg font-bold text-white">LastKey Status</h3>
+          <p className="mt-1 text-sm text-slate-400">Locked balance: {balance} XTZ</p>
         </div>
         <div className="flex items-center gap-2">
           {warningIssued ? (
@@ -158,7 +158,7 @@ export default function VaultStatus({ address }: VaultStatusProps) {
               return (
                 <div
                   key={`${walletString}-${i}`}
-                  className="flex items-center justify-between rounded-lg bg-black/30 px-3 py-2"
+                  className="flex flex-col gap-2 rounded-2xl bg-black/30 px-4 py-3 sm:flex-row sm:items-center sm:justify-between"
                 >
                   <div className="flex items-center gap-2">
                     <span className="text-xs capitalize text-gray-400">

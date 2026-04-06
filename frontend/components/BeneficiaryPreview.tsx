@@ -25,8 +25,8 @@ export default function BeneficiaryPreview({
   const isValid = totalCheck === 10000;
 
   return (
-    <div className="animate-fade-in rounded-2xl border border-white/10 bg-white/5 p-6">
-      <div className="mb-4 flex items-center justify-between">
+    <div className="animate-fade-in rounded-[28px] border border-white/10 bg-white/5 p-6">
+      <div className="mb-4 flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-center">
         <div>
           <h3 className="text-sm font-bold">AI Structured Your Plan</h3>
           <p className="mt-0.5 text-xs text-gray-500">
@@ -48,7 +48,7 @@ export default function BeneficiaryPreview({
         {beneficiaries.map((beneficiary, index) => (
           <div
             key={`${beneficiary.address}-${index}`}
-            className="flex items-center justify-between rounded-xl border border-white/10 bg-black/30 px-4 py-3"
+            className="flex flex-col gap-3 rounded-2xl border border-white/10 bg-black/30 px-4 py-4 sm:flex-row sm:items-center sm:justify-between"
           >
             <div>
               <p className="text-sm font-bold capitalize">{beneficiary.label}</p>
@@ -96,7 +96,7 @@ export default function BeneficiaryPreview({
         </div>
       </div>
 
-      <div className="flex gap-3">
+      <div className="flex flex-col gap-3 sm:flex-row">
         <button
           onClick={onEdit}
           disabled={isLoading}

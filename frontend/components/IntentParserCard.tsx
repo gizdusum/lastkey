@@ -99,22 +99,24 @@ export default function InheritanceForm({ address }: { address: string }) {
       ) : null}
 
       {step === "input" ? (
-        <div className="animate-fade-in rounded-3xl border border-white/10 bg-white/5 p-6">
-          <h3 className="mb-1 text-lg font-black">Set Your Continuity Plan</h3>
-          <p className="mb-5 text-sm text-slate-400">
-            Keep it short. AI will turn your sentence into wallet allocations and a
-            300-day continuity rule.
-          </p>
+        <div className="animate-fade-in rounded-[28px] border border-white/10 bg-white/5 p-6 sm:p-7">
+          <div className="mb-5 text-center">
+            <h3 className="text-xl font-black text-white">Set Your Continuity Plan</h3>
+            <p className="mx-auto mt-2 max-w-2xl text-sm leading-7 text-slate-400">
+              Write one clean instruction. AI will structure it into beneficiary wallets
+              and the 300-day continuity rule behind your vault.
+            </p>
+          </div>
 
           <textarea
             value={naturalLanguage}
             onChange={(e) => setNaturalLanguage(e.target.value)}
-            placeholder="e.g. If I'm unreachable for 300 days, send 70% to my family at 0xABC... and 30% to my foundation at 0xDEF..."
-            className="min-h-[120px] w-full resize-none rounded-2xl border border-white/15 bg-black/30 p-4 text-sm text-white placeholder-slate-500 transition-colors focus:border-amber-500/50 focus:outline-none"
+            placeholder="e.g. If I'm unreachable for 300 days, send 70% to my family at 0x... and 30% to my foundation at 0x..."
+            className="min-h-[140px] w-full resize-none rounded-3xl border border-white/15 bg-black/30 p-5 text-sm text-white placeholder-slate-500 transition-colors focus:border-amber-500/50 focus:outline-none"
           />
-          <p className="mt-2 text-xs text-slate-500">
-            Template: “If I cannot check in for 300 days, send 60% to 0x... and 40%
-            to 0x...”
+          <p className="mt-3 text-center text-xs text-slate-500">
+            Example format: “If I cannot check in for 300 days, send 60% to 0x... and
+            40% to 0x...”
           </p>
 
           <div className="mt-3">
@@ -176,20 +178,22 @@ export default function InheritanceForm({ address }: { address: string }) {
             </div>
           ) : null}
 
-          <button
-            onClick={handleParse}
-            disabled={parsing || !naturalLanguage.trim() || !email.trim()}
-            className="mt-6 flex w-full items-center justify-center gap-2 rounded-full bg-amber-500 py-4 font-black text-black transition-all hover:bg-amber-400 disabled:cursor-not-allowed disabled:opacity-50"
-          >
-            {parsing ? (
-              <>
-                <span className="h-4 w-4 animate-spin rounded-full border-2 border-black/40 border-t-black" />
-                AI is structuring your plan...
-              </>
-            ) : (
-              "✨ Structure with AI →"
-            )}
-          </button>
+          <div className="mt-6 flex justify-center">
+            <button
+              onClick={handleParse}
+              disabled={parsing || !naturalLanguage.trim() || !email.trim()}
+              className="flex w-full items-center justify-center gap-2 rounded-full bg-amber-500 py-4 font-black text-black transition-all hover:bg-amber-400 disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto sm:min-w-[280px] sm:px-8"
+            >
+              {parsing ? (
+                <>
+                  <span className="h-4 w-4 animate-spin rounded-full border-2 border-black/40 border-t-black" />
+                  AI is structuring your plan...
+                </>
+              ) : (
+                "✨ Structure with AI →"
+              )}
+            </button>
+          </div>
         </div>
       ) : (
         <BeneficiaryPreview
