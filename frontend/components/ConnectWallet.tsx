@@ -46,7 +46,7 @@ export default function ConnectWallet({
 
   return (
     <div className="flex flex-wrap items-center justify-end gap-2">
-      <div className="hidden rounded-full border border-slate-300 bg-white px-3 py-2 text-xs text-slate-600 sm:block">
+      <div className="hidden rounded-full border border-slate-300 bg-white px-3 py-2 text-xs text-slate-600 lg:block">
         {chain?.name || "Etherlink Shadownet"}
       </div>
       <div className="rounded-full border border-slate-300 bg-white px-3 py-2 text-xs font-mono text-slate-700">

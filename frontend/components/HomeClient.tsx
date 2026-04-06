@@ -77,33 +77,6 @@ export default function HomeClient() {
               Get Test XTZ
             </a>
 
-            {isConnected ? (
-              <>
-                <button
-                  type="button"
-                  onClick={() => setView("home")}
-                  className={`whitespace-nowrap rounded-full px-3 py-2 text-xs font-medium transition-colors ${
-                    view === "home"
-                      ? "bg-slate-950 text-white"
-                      : "border border-slate-300 bg-white/85 text-slate-600 hover:text-slate-950"
-                  }`}
-                >
-                  Home
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setView("dashboard")}
-                  className={`whitespace-nowrap rounded-full px-3 py-2 text-xs font-medium transition-colors ${
-                    view === "dashboard"
-                      ? "bg-slate-950 text-white"
-                      : "border border-slate-300 bg-white/85 text-slate-600 hover:text-slate-950"
-                  }`}
-                >
-                  Dashboard
-                </button>
-              </>
-            ) : null}
-
             <ConnectWallet />
           </div>
         </div>
@@ -201,7 +174,7 @@ export default function HomeClient() {
         </section>
       ) : (
         <section className="px-4 pb-20 pt-12 sm:px-6">
-          <div className="mx-auto max-w-4xl">
+          <div className="mx-auto max-w-3xl">
             <div className="mb-6 flex flex-col items-center justify-between gap-3 sm:flex-row">
               <button
                 type="button"
@@ -210,12 +183,9 @@ export default function HomeClient() {
               >
                 ← Back to Home
               </button>
-              <p className="text-center text-xs text-slate-400 sm:text-right">
-                Connected as
-                <span className="ml-2 font-mono text-slate-200">
-                  {address?.slice(0, 6)}...{address?.slice(-4)}
-                </span>
-              </p>
+              <div className="rounded-full border border-white/10 bg-white/6 px-4 py-2 text-xs text-slate-300">
+                Dashboard
+              </div>
             </div>
 
             <div className="rounded-[36px] border border-white/10 bg-slate-950/78 p-5 shadow-[0_30px_90px_rgba(2,6,23,0.45)] backdrop-blur sm:p-8">
@@ -224,11 +194,11 @@ export default function HomeClient() {
                   LASTKEY VAULT
                 </p>
                 <h2 className="mt-3 text-3xl font-black tracking-tight text-white">
-                  Set it once. Keep it simple.
+                  Calm, clear continuity.
                 </h2>
                 <p className="mx-auto mt-3 max-w-2xl text-sm leading-7 text-slate-400">
-                  Review your protected balance, keep your continuity window alive, and
-                  anchor a clean instruction for the wallets you trust.
+                  Keep one trusted plan onchain, check in when you want, and let
+                  Etherlink carry out exactly what you approved if you ever stop responding.
                 </p>
               </div>
 

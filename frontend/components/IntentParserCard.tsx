@@ -1,7 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { useWaitForTransactionReceipt, useWriteContract } from "wagmi";
+import {
+  useAccount,
+  useBalance,
+  usePublicClient,
+  useWaitForTransactionReceipt,
+  useWriteContract,
+} from "wagmi";
 import { parseEther } from "viem";
 import { LASTKEY_ABI, LASTKEY_ADDRESS } from "@/lib/contract";
 import BeneficiaryPreview from "./BeneficiaryPreview";
@@ -16,6 +22,11 @@ interface Beneficiary {
 type Step = "input" | "preview";
 
 export default function InheritanceForm({ address }: { address: string }) {
+  const publicClient = usePublicClient();
+  const { chainId } = useAccount();
+  const { data: balance } = useBalance({
+    address: address as `0x${string}`,
+  });
   const [step, setStep] = useState<Step>("input");
   const [naturalLanguage, setNaturalLanguage] = useState("");
   const [email, setEmail] = useState("");
@@ -23,6 +34,7 @@ export default function InheritanceForm({ address }: { address: string }) {
   const [parsed, setParsed] = useState<Beneficiary[]>([]);
   const [parsing, setParsing] = useState(false);
   const [parseError, setParseError] = useState("");
+  const [actionError, setActionError] = useState("");
 
   const {
     writeContract,
@@ -40,6 +52,7 @@ export default function InheritanceForm({ address }: { address: string }) {
     if (!naturalLanguage.trim() || !email.trim()) return;
     setParsing(true);
     setParseError("");
+    setActionError("");
 
     try {
       const res = await fetch("/api/parse-intent", {
@@ -66,21 +79,75 @@ export default function InheritanceForm({ address }: { address: string }) {
 
   const handleCreateVault = () => {
     if (parsed.length === 0) return;
+    setActionError("");
 
-    writeContract({
-      address: LASTKEY_ADDRESS,
-      abi: LASTKEY_ABI,
-      functionName: "createVault",
-      args: [
+    void (async () => {
+      const depositValue = parseEther(depositAmount || "0");
+      const lowBalanceThreshold = parseEther("0.001");
+
+      if (chainId !== 127823) {
+        setActionError("Switch your wallet to Etherlink Shadownet before anchoring.");
+        return;
+      }
+
+      if (!balance || balance.value < depositValue + lowBalanceThreshold) {
+        setActionError(
+          "Your wallet needs a little more test XTZ before this transaction can be estimated and sent. Use the faucet, then try again."
+        );
+        return;
+      }
+
+      const args = [
         email,
         parsed.map((b) => b.address as `0x${string}`),
         parsed.map((b) => BigInt(b.percentage)),
         parsed.map((b) => b.label),
         naturalLanguage,
         BigInt(300),
-      ],
-      value: parseEther(depositAmount || "0"),
-    });
+      ] as const;
+
+      try {
+        if (publicClient) {
+          await publicClient.simulateContract({
+            address: LASTKEY_ADDRESS,
+            abi: LASTKEY_ABI,
+            functionName: "createVault",
+            args,
+            account: address as `0x${string}`,
+            value: depositValue,
+          });
+        }
+
+        writeContract({
+          address: LASTKEY_ADDRESS,
+          abi: LASTKEY_ABI,
+          functionName: "createVault",
+          args,
+          value: depositValue,
+        });
+      } catch (error) {
+        const message =
+          error instanceof Error ? error.message : "Simulation failed before wallet confirmation.";
+
+        if (message.toLowerCase().includes("already exists")) {
+          setActionError("This wallet already has a continuity vault. Open the existing vault instead of creating a new one.");
+          return;
+        }
+
+        if (
+          message.toLowerCase().includes("insufficient") ||
+          message.toLowerCase().includes("funds") ||
+          message.toLowerCase().includes("gas")
+        ) {
+          setActionError(
+            "The wallet could not estimate gas. In most cases this means the wallet needs more test XTZ for network fees."
+          );
+          return;
+        }
+
+        setActionError("The transaction could not be prepared. Please check your wallet network and try again.");
+      }
+    })();
   };
 
   return (
@@ -96,6 +163,15 @@ export default function InheritanceForm({ address }: { address: string }) {
           txHash={txHash}
           tone={isSuccess ? "success" : "info"}
         />
+      ) : null}
+
+      {!isSuccess && balance ? (
+        <div className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-center text-xs text-slate-400">
+          Wallet balance:{" "}
+          <span className="font-semibold text-slate-200">
+            {Number(balance.formatted).toFixed(4)} {balance.symbol}
+          </span>
+        </div>
       ) : null}
 
       {step === "input" ? (
@@ -169,6 +245,13 @@ export default function InheritanceForm({ address }: { address: string }) {
             </div>
           ) : null}
 
+          {actionError ? (
+            <div className="mt-3 rounded-xl border border-amber-500/30 bg-amber-900/20 p-4">
+              <p className="text-sm font-bold text-amber-300">Before wallet confirmation</p>
+              <p className="mt-1 text-xs leading-6 text-amber-100/80">{actionError}</p>
+            </div>
+          ) : null}
+
           {writeError ? (
             <div className="mt-3 rounded-xl border border-red-500/30 bg-red-900/20 p-4">
               <p className="text-sm font-bold text-red-400">Transaction failed</p>
@@ -202,6 +285,7 @@ export default function InheritanceForm({ address }: { address: string }) {
           onEdit={() => {
             setStep("input");
             setParseError("");
+            setActionError("");
             resetWrite();
           }}
           onConfirm={handleCreateVault}
