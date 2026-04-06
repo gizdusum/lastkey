@@ -1,8 +1,10 @@
-export const DEADDROP_ADDRESS = (
-  process.env.NEXT_PUBLIC_DEADDROP_ADDRESS || ""
+export const LASTKEY_ADDRESS = (
+  process.env.NEXT_PUBLIC_LASTKEY_ADDRESS ||
+  process.env.NEXT_PUBLIC_DEADDROP_ADDRESS ||
+  ""
 ) as `0x${string}`;
 
-export const DEADDROP_ABI = [
+export const LASTKEY_ABI = [
   {
     name: "createVault",
     type: "function",

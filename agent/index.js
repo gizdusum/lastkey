@@ -1,5 +1,5 @@
 /**
- * DeadDrop AI Agent — Ana Giriş Noktası
+ * LastKey AI Agent — Ana Giriş Noktası
  *
  * Her 24 saatte bir tüm kayıtlı vault'ları Etherlink üzerinde tarar.
  * Eşiğe göre warning e-postası gönderir veya kalıtım kontratını tetikler.
@@ -16,7 +16,7 @@ const { checkAllVaults } = require("./monitor");
 const REQUIRED_ENV = [
   "ETHERLINK_RPC_URL",
   "AGENT_PRIVATE_KEY",
-  "DEADDROP_CONTRACT_ADDRESS",
+  "LASTKEY_CONTRACT_ADDRESS",
 ];
 
 const OPTIONAL_ENV = [
@@ -42,17 +42,21 @@ if (missingOptionalEnv.length > 0) {
 const provider = new ethers.JsonRpcProvider(process.env.ETHERLINK_RPC_URL);
 const agentWallet = new ethers.Wallet(process.env.AGENT_PRIVATE_KEY, provider);
 
+if (!process.env.LASTKEY_CONTRACT_ADDRESS && process.env.DEADDROP_CONTRACT_ADDRESS) {
+  process.env.LASTKEY_CONTRACT_ADDRESS = process.env.DEADDROP_CONTRACT_ADDRESS;
+}
+
 async function startup() {
   const network = await provider.getNetwork();
   const balance = await provider.getBalance(agentWallet.address);
 
   console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
-  console.log("  ⚰️  DeadDrop AI Agent — ONLINE");
+  console.log("  🔑  LastKey AI Agent — ONLINE");
   console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
   console.log(`Network  : ${network.name || "unknown"} (chainId: ${network.chainId})`);
   console.log(`Agent    : ${agentWallet.address}`);
   console.log(`Balance  : ${ethers.formatEther(balance)} XTZ`);
-  console.log(`Contract : ${process.env.DEADDROP_CONTRACT_ADDRESS}`);
+  console.log(`Contract : ${process.env.LASTKEY_CONTRACT_ADDRESS}`);
   console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n");
 
   if (balance === 0n) {

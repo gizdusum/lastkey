@@ -2,7 +2,7 @@
 
 import { useReadContract } from "wagmi";
 import { formatEther } from "viem";
-import { DEADDROP_ABI, DEADDROP_ADDRESS } from "@/lib/contract";
+import { LASTKEY_ABI, LASTKEY_ADDRESS } from "@/lib/contract";
 import ActivityPing from "./ActivityPing";
 
 interface VaultStatusProps {
@@ -14,16 +14,16 @@ export default function VaultStatus({ address }: VaultStatusProps) {
     data: status,
     isLoading,
   } = useReadContract({
-    address: DEADDROP_ADDRESS,
-    abi: DEADDROP_ABI,
+    address: LASTKEY_ADDRESS,
+    abi: LASTKEY_ABI,
     functionName: "getVaultStatus",
     args: [address as `0x${string}`],
     query: { refetchInterval: 15000 },
   });
 
   const { data: beneficiaries } = useReadContract({
-    address: DEADDROP_ADDRESS,
-    abi: DEADDROP_ABI,
+    address: LASTKEY_ADDRESS,
+    abi: LASTKEY_ABI,
     functionName: "getBeneficiaries",
     args: [address as `0x${string}`],
     query: { enabled: !!status?.[0] },
@@ -45,8 +45,8 @@ export default function VaultStatus({ address }: VaultStatusProps) {
   if (!status || !status[0]) {
     return (
       <div className="mb-6 rounded-2xl border border-white/10 bg-white/5 p-6 text-center">
-        <p className="text-sm text-gray-400">No vault found for this wallet.</p>
-        <p className="mt-1 text-xs text-gray-600">Set your continuity plan below ↓</p>
+        <p className="text-sm text-slate-300">No continuity vault yet.</p>
+        <p className="mt-1 text-xs text-slate-500">Create one below when you are ready.</p>
       </div>
     );
   }
@@ -99,12 +99,12 @@ export default function VaultStatus({ address }: VaultStatusProps) {
 
   return (
     <div
-      className={`mb-6 rounded-2xl border p-6 transition-all ${urgencyStyle.border} ${urgencyStyle.bg}`}
+      className={`mb-6 rounded-3xl border p-6 transition-all ${urgencyStyle.border} ${urgencyStyle.bg}`}
     >
       <div className="mb-5 flex items-center justify-between">
         <div>
           <h3 className="font-bold">LastKey Status</h3>
-          <p className="mt-0.5 text-xs text-gray-500">Locked balance: {balance} XTZ</p>
+          <p className="mt-0.5 text-xs text-slate-500">Locked balance: {balance} XTZ</p>
         </div>
         <div className="flex items-center gap-2">
           {warningIssued ? (
@@ -118,18 +118,18 @@ export default function VaultStatus({ address }: VaultStatusProps) {
         </div>
       </div>
 
-      <div className="mb-5 grid grid-cols-3 gap-3">
-        <div className="rounded-xl bg-black/30 p-4 text-center">
+      <div className="mb-5 grid grid-cols-1 gap-3 sm:grid-cols-3">
+        <div className="rounded-2xl bg-black/30 p-4 text-center">
           <p className={`text-3xl font-black ${urgencyStyle.color}`}>{days}</p>
           <p className="mt-1 text-[10px] text-gray-500">DAYS SINCE CHECK-IN</p>
         </div>
-        <div className="rounded-xl bg-black/30 p-4 text-center">
+        <div className="rounded-2xl bg-black/30 p-4 text-center">
           <p className={`text-3xl font-black ${remaining <= 30 ? "text-red-400" : "text-white"}`}>
             {remaining}
           </p>
           <p className="mt-1 text-[10px] text-gray-500">DAYS REMAINING</p>
         </div>
-        <div className="rounded-xl bg-black/30 p-4 text-center">
+        <div className="rounded-2xl bg-black/30 p-4 text-center">
           <p className="text-3xl font-black text-gray-400">{Number(beneficiaryCount)}</p>
           <p className="mt-1 text-[10px] text-gray-500">BENEFICIARIES</p>
         </div>
@@ -137,7 +137,7 @@ export default function VaultStatus({ address }: VaultStatusProps) {
 
       <div className="mb-5">
         <div className="mb-1.5 flex justify-between text-[10px] text-gray-600">
-          <span>Last activity</span>
+          <span>Window progress</span>
           <span>{progress.toFixed(1)}% to execution</span>
           <span>300 days</span>
         </div>

@@ -23,7 +23,7 @@ export default function ConnectWallet({
       <button
         onClick={() => connectAsync({ connector: injected() })}
         disabled={isPending}
-        className={`rounded-xl bg-amber-500 font-bold text-black transition-all duration-200 hover:bg-amber-400 disabled:opacity-60 ${baseClass}`}
+        className={`rounded-full bg-amber-500 font-bold text-black transition-all duration-200 hover:bg-amber-400 disabled:opacity-60 ${baseClass}`}
       >
         {isPending ? "Connecting..." : "Connect Wallet"}
       </button>
@@ -35,7 +35,7 @@ export default function ConnectWallet({
       <button
         onClick={() => switchChainAsync({ chainId: etherlinkTestnet.id })}
         disabled={isSwitching}
-        className="rounded-xl bg-red-500 px-5 py-2.5 text-sm font-bold text-white hover:bg-red-400 disabled:opacity-60"
+        className="rounded-full bg-red-500 px-5 py-2.5 text-sm font-bold text-white hover:bg-red-400 disabled:opacity-60"
       >
         {isSwitching ? "Switching..." : "⚠️ Switch to Etherlink"}
       </button>
@@ -44,16 +44,17 @@ export default function ConnectWallet({
 
   return (
     <div className="flex items-center gap-2">
-      <div className="rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-xs text-gray-300">
+      <div className="hidden rounded-full border border-slate-300 bg-white px-3 py-2 text-xs text-slate-600 sm:block">
         {chain?.name || "Etherlink Shadownet"}
+      </div>
+      <div className="rounded-full border border-slate-300 bg-white px-3 py-2 text-xs font-mono text-slate-700">
+        {address ? `${address.slice(0, 6)}...${address.slice(-4)}` : "Connected"}
       </div>
       <button
         onClick={() => disconnect()}
-        className="rounded-lg border border-white/20 bg-white/10 px-4 py-2 text-sm font-mono transition-all hover:bg-white/20"
+        className="rounded-full border border-slate-300 bg-white px-4 py-2 text-xs font-semibold text-slate-700 transition-all hover:border-slate-900 hover:text-slate-950"
       >
-        {address
-          ? `${address.slice(0, 6)}...${address.slice(-4)}`
-          : "Disconnect"}
+        Disconnect
       </button>
     </div>
   );

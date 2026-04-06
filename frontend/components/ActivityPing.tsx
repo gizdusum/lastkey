@@ -1,7 +1,7 @@
 "use client";
 
 import { useWriteContract, useWaitForTransactionReceipt } from "wagmi";
-import { DEADDROP_ABI, DEADDROP_ADDRESS } from "@/lib/contract";
+import { LASTKEY_ABI, LASTKEY_ADDRESS } from "@/lib/contract";
 import ExplorerLink from "./ExplorerLink";
 
 export default function ActivityPing() {
@@ -19,8 +19,8 @@ export default function ActivityPing() {
 
   const handlePing = () => {
     writeContract({
-      address: DEADDROP_ADDRESS,
-      abi: DEADDROP_ABI,
+      address: LASTKEY_ADDRESS,
+      abi: LASTKEY_ABI,
       functionName: "pingActivity",
     });
   };

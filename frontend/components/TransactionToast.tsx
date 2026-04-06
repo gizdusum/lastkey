@@ -18,7 +18,7 @@ export default function TransactionToast({
   const styles = {
     success: "border-green-500/30 bg-green-900/20 text-green-300",
     error: "border-red-500/30 bg-red-900/20 text-red-300",
-    info: "border-cyan-500/30 bg-cyan-900/20 text-cyan-300",
+    info: "border-amber-500/30 bg-amber-900/20 text-amber-200",
   }[tone];
 
   return (
