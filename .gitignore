@@ -1,0 +1,13 @@
+node_modules/
+frontend/node_modules/
+.next/
+frontend/.next/
+.env
+frontend/.env.local
+frontend/.env.local.save
+frontend/.gitignore
+dist/
+coverage/
+*.tsbuildinfo
+artifacts/
+cache/
