@@ -20,6 +20,7 @@ interface Beneficiary {
 }
 
 type Step = "input" | "preview";
+const CREATE_VAULT_GAS_LIMIT = 500_000n;
 
 export default function InheritanceForm({ address }: { address: string }) {
   const publicClient = usePublicClient();
@@ -115,8 +116,12 @@ export default function InheritanceForm({ address }: { address: string }) {
             args,
             account: address as `0x${string}`,
             value: depositValue,
+            gas: CREATE_VAULT_GAS_LIMIT,
           });
-          writeContract(simulation.request);
+          writeContract({
+            ...simulation.request,
+            gas: simulation.request.gas ?? CREATE_VAULT_GAS_LIMIT,
+          });
           return;
         }
 
@@ -126,6 +131,7 @@ export default function InheritanceForm({ address }: { address: string }) {
           functionName: "createVault",
           args,
           value: depositValue,
+          gas: CREATE_VAULT_GAS_LIMIT,
         });
       } catch (error) {
         const message =
