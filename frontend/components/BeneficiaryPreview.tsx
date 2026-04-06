@@ -25,7 +25,7 @@ export default function BeneficiaryPreview({
   const isValid = totalCheck === 10000;
 
   return (
-    <div className="animate-fade-in rounded-[32px] border border-white/10 bg-white/5 p-6">
+    <div className="glass-panel animate-fade-in rounded-[32px] p-6">
       <div className="mb-5 flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-center">
         <div>
           <h3 className="text-lg font-bold text-white">AI Structured Your Plan</h3>
@@ -48,7 +48,7 @@ export default function BeneficiaryPreview({
         {beneficiaries.map((beneficiary, index) => (
           <div
             key={`${beneficiary.address}-${index}`}
-            className="flex flex-col gap-3 rounded-[24px] border border-white/10 bg-black/30 px-5 py-4 sm:flex-row sm:items-center sm:justify-between"
+            className="flex flex-col gap-3 rounded-[24px] border border-white/10 bg-white/5 px-5 py-4 sm:flex-row sm:items-center sm:justify-between"
           >
             <div>
               <p className="text-base font-semibold capitalize text-white">{beneficiary.label}</p>
@@ -73,7 +73,7 @@ export default function BeneficiaryPreview({
         ))}
       </div>
 
-      <div className="mb-5 space-y-2 rounded-[24px] border border-white/10 bg-black/40 p-5">
+      <div className="mb-5 space-y-2 rounded-[24px] border border-white/10 bg-white/5 p-5">
         <div className="flex justify-between text-xs">
           <span className="text-gray-400">Initial balance</span>
           <span className="font-bold text-white">{depositAmount} XTZ</span>

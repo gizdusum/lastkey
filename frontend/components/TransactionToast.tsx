@@ -22,9 +22,9 @@ export default function TransactionToast({
   }[tone];
 
   return (
-    <div className={`animate-fade-in rounded-xl border p-4 ${styles}`}>
+    <div className={`animate-fade-in rounded-[24px] border p-4 ${styles}`}>
       <p className="text-sm font-bold">{title}</p>
-      <p className="mt-1 text-xs text-gray-300">{message}</p>
+      <p className="mt-2 text-sm leading-7 text-gray-300">{message}</p>
       {txHash ? (
         <div className="mt-2 break-all">
           <ExplorerLink type="tx" hash={txHash} label={txHash} className="text-cyan-300" />

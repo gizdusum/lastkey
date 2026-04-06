@@ -31,7 +31,7 @@ export default function VaultStatus({ address }: VaultStatusProps) {
 
   if (isLoading) {
     return (
-      <div className="mb-6 animate-pulse rounded-2xl border border-white/10 bg-white/5 p-6">
+      <div className="glass-panel mb-6 animate-pulse rounded-[30px] p-6">
         <div className="mb-4 h-4 w-1/3 rounded bg-white/10" />
         <div className="grid grid-cols-3 gap-4">
           {[1, 2, 3].map((item) => (
@@ -44,7 +44,7 @@ export default function VaultStatus({ address }: VaultStatusProps) {
 
   if (!status || !status[0]) {
     return (
-      <div className="mb-6 rounded-[32px] border border-white/10 bg-white/5 p-6 text-center">
+      <div className="glass-panel mb-6 rounded-[30px] p-6 text-center">
         <p className="text-base font-semibold text-white">No continuity vault yet</p>
         <p className="mt-2 text-sm leading-7 text-slate-400">
           Create your first plan below. Once anchored, this panel will show your protected
@@ -102,7 +102,7 @@ export default function VaultStatus({ address }: VaultStatusProps) {
 
   return (
     <div
-      className={`mb-6 rounded-[32px] border p-6 transition-all ${urgencyStyle.border} ${urgencyStyle.bg}`}
+      className={`glass-panel mb-6 rounded-[30px] border p-6 transition-all ${urgencyStyle.border} ${urgencyStyle.bg}`}
     >
       <div className="mb-5 flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-center">
         <div>
@@ -122,17 +122,17 @@ export default function VaultStatus({ address }: VaultStatusProps) {
       </div>
 
       <div className="mb-5 grid grid-cols-1 gap-3 sm:grid-cols-3">
-        <div className="rounded-[24px] bg-black/30 p-4 text-center">
+        <div className="rounded-[24px] bg-white/5 p-4 text-center">
           <p className={`text-3xl font-black ${urgencyStyle.color}`}>{days}</p>
           <p className="mt-1 text-[10px] text-gray-500">DAYS SINCE CHECK-IN</p>
         </div>
-        <div className="rounded-[24px] bg-black/30 p-4 text-center">
+        <div className="rounded-[24px] bg-white/5 p-4 text-center">
           <p className={`text-3xl font-black ${remaining <= 30 ? "text-red-400" : "text-white"}`}>
             {remaining}
           </p>
           <p className="mt-1 text-[10px] text-gray-500">DAYS REMAINING</p>
         </div>
-        <div className="rounded-[24px] bg-black/30 p-4 text-center">
+        <div className="rounded-[24px] bg-white/5 p-4 text-center">
           <p className="text-3xl font-black text-gray-400">{Number(beneficiaryCount)}</p>
           <p className="mt-1 text-[10px] text-gray-500">BENEFICIARIES</p>
         </div>
@@ -144,7 +144,7 @@ export default function VaultStatus({ address }: VaultStatusProps) {
           <span>{progress.toFixed(1)}% to execution</span>
           <span>300 days</span>
         </div>
-        <div className="h-2 w-full rounded-full bg-black/50">
+        <div className="h-2 w-full rounded-full bg-white/8">
           <div
             className={`h-2 rounded-full transition-all duration-700 ${urgencyStyle.bar}`}
             style={{ width: `${progress}%` }}
@@ -161,7 +161,7 @@ export default function VaultStatus({ address }: VaultStatusProps) {
               return (
                 <div
                   key={`${walletString}-${i}`}
-                  className="flex flex-col gap-2 rounded-[22px] bg-black/30 px-4 py-3 sm:flex-row sm:items-center sm:justify-between"
+                  className="flex flex-col gap-2 rounded-[22px] bg-white/5 px-4 py-3 sm:flex-row sm:items-center sm:justify-between"
                 >
                   <div className="flex items-center gap-2">
                     <span className="text-xs capitalize text-gray-400">

@@ -27,7 +27,7 @@ export default function ActivityPing() {
 
   if (isSuccess) {
     return (
-      <div className="animate-fade-in rounded-xl border border-green-500/30 bg-green-900/20 p-4 text-center">
+      <div className="animate-fade-in rounded-[24px] border border-green-500/30 bg-green-900/20 p-4 text-center">
         <p className="text-sm font-bold text-green-400">✅ Check-in confirmed onchain</p>
         <p className="mt-1 text-xs text-gray-500">Your continuity window has been reset</p>
         {txHash ? (
@@ -42,7 +42,7 @@ export default function ActivityPing() {
   if (writeError) {
     return (
       <div className="space-y-2">
-        <div className="rounded-xl border border-red-500/30 bg-red-900/20 p-4 text-center">
+        <div className="rounded-[24px] border border-red-500/30 bg-red-900/20 p-4 text-center">
           <p className="text-sm text-red-400">Transaction failed</p>
           <p className="mt-1 break-words text-xs text-gray-500">
             {writeError.message?.slice(0, 100)}
@@ -62,7 +62,7 @@ export default function ActivityPing() {
     <button
       onClick={handlePing}
       disabled={isPending || isConfirming}
-      className="group flex w-full items-center justify-center gap-2 rounded-2xl border border-white/20 bg-white/10 py-4 text-sm font-bold transition-all duration-200 hover:bg-white/15 disabled:opacity-50"
+      className="group flex w-full items-center justify-center gap-2 rounded-full border border-white/14 bg-white/6 py-4 text-sm font-semibold text-white transition-all duration-200 hover:bg-white/10 disabled:opacity-50"
     >
       {isPending ? (
         <>
