@@ -44,9 +44,12 @@ export default function VaultStatus({ address }: VaultStatusProps) {
 
   if (!status || !status[0]) {
     return (
-      <div className="mb-6 rounded-[28px] border border-white/10 bg-white/5 p-6 text-center">
-        <p className="text-sm text-slate-300">No continuity vault yet.</p>
-        <p className="mt-1 text-xs text-slate-500">Create one below when you are ready.</p>
+      <div className="mb-6 rounded-[32px] border border-white/10 bg-white/5 p-6 text-center">
+        <p className="text-base font-semibold text-white">No continuity vault yet</p>
+        <p className="mt-2 text-sm leading-7 text-slate-400">
+          Create your first plan below. Once anchored, this panel will show your protected
+          balance, check-in window, and beneficiary status.
+        </p>
       </div>
     );
   }
@@ -99,7 +102,7 @@ export default function VaultStatus({ address }: VaultStatusProps) {
 
   return (
     <div
-      className={`mb-6 rounded-[28px] border p-6 transition-all ${urgencyStyle.border} ${urgencyStyle.bg}`}
+      className={`mb-6 rounded-[32px] border p-6 transition-all ${urgencyStyle.border} ${urgencyStyle.bg}`}
     >
       <div className="mb-5 flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-center">
         <div>
@@ -119,17 +122,17 @@ export default function VaultStatus({ address }: VaultStatusProps) {
       </div>
 
       <div className="mb-5 grid grid-cols-1 gap-3 sm:grid-cols-3">
-        <div className="rounded-2xl bg-black/30 p-4 text-center">
+        <div className="rounded-[24px] bg-black/30 p-4 text-center">
           <p className={`text-3xl font-black ${urgencyStyle.color}`}>{days}</p>
           <p className="mt-1 text-[10px] text-gray-500">DAYS SINCE CHECK-IN</p>
         </div>
-        <div className="rounded-2xl bg-black/30 p-4 text-center">
+        <div className="rounded-[24px] bg-black/30 p-4 text-center">
           <p className={`text-3xl font-black ${remaining <= 30 ? "text-red-400" : "text-white"}`}>
             {remaining}
           </p>
           <p className="mt-1 text-[10px] text-gray-500">DAYS REMAINING</p>
         </div>
-        <div className="rounded-2xl bg-black/30 p-4 text-center">
+        <div className="rounded-[24px] bg-black/30 p-4 text-center">
           <p className="text-3xl font-black text-gray-400">{Number(beneficiaryCount)}</p>
           <p className="mt-1 text-[10px] text-gray-500">BENEFICIARIES</p>
         </div>
@@ -158,7 +161,7 @@ export default function VaultStatus({ address }: VaultStatusProps) {
               return (
                 <div
                   key={`${walletString}-${i}`}
-                  className="flex flex-col gap-2 rounded-2xl bg-black/30 px-4 py-3 sm:flex-row sm:items-center sm:justify-between"
+                  className="flex flex-col gap-2 rounded-[22px] bg-black/30 px-4 py-3 sm:flex-row sm:items-center sm:justify-between"
                 >
                   <div className="flex items-center gap-2">
                     <span className="text-xs capitalize text-gray-400">

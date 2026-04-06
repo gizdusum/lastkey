@@ -108,7 +108,7 @@ export default function InheritanceForm({ address }: { address: string }) {
 
       try {
         if (publicClient) {
-          await publicClient.simulateContract({
+          const simulation = await publicClient.simulateContract({
             address: LASTKEY_ADDRESS,
             abi: LASTKEY_ABI,
             functionName: "createVault",
@@ -116,6 +116,8 @@ export default function InheritanceForm({ address }: { address: string }) {
             account: address as `0x${string}`,
             value: depositValue,
           });
+          writeContract(simulation.request);
+          return;
         }
 
         writeContract({
@@ -166,7 +168,7 @@ export default function InheritanceForm({ address }: { address: string }) {
       ) : null}
 
       {!isSuccess && balance ? (
-        <div className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-center text-xs text-slate-400">
+        <div className="rounded-[24px] border border-white/10 bg-white/5 px-4 py-3 text-center text-xs text-slate-400">
           Wallet balance:{" "}
           <span className="font-semibold text-slate-200">
             {Number(balance.formatted).toFixed(4)} {balance.symbol}
@@ -175,7 +177,7 @@ export default function InheritanceForm({ address }: { address: string }) {
       ) : null}
 
       {step === "input" ? (
-        <div className="animate-fade-in rounded-[28px] border border-white/10 bg-white/5 p-6 sm:p-7">
+        <div className="animate-fade-in rounded-[32px] border border-white/10 bg-white/5 p-6 sm:p-7">
           <div className="mb-5 text-center">
             <h3 className="text-xl font-black text-white">Set Your Continuity Plan</h3>
             <p className="mx-auto mt-2 max-w-2xl text-sm leading-7 text-slate-400">
@@ -188,7 +190,7 @@ export default function InheritanceForm({ address }: { address: string }) {
             value={naturalLanguage}
             onChange={(e) => setNaturalLanguage(e.target.value)}
             placeholder="e.g. If I'm unreachable for 300 days, send 70% to my family at 0x... and 30% to my foundation at 0x..."
-            className="min-h-[140px] w-full resize-none rounded-3xl border border-white/15 bg-black/30 p-5 text-sm text-white placeholder-slate-500 transition-colors focus:border-amber-500/50 focus:outline-none"
+            className="min-h-[160px] w-full resize-none rounded-[28px] border border-white/15 bg-black/30 p-5 text-sm leading-7 text-white placeholder-slate-500 transition-colors focus:border-amber-500/50 focus:outline-none"
           />
           <p className="mt-3 text-center text-xs text-slate-500">
             Example format: “If I cannot check in for 300 days, send 60% to 0x... and
@@ -204,7 +206,7 @@ export default function InheritanceForm({ address }: { address: string }) {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="you@example.com"
-              className="w-full rounded-2xl border border-white/15 bg-black/30 p-3 text-sm text-white placeholder-slate-500 transition-colors focus:border-amber-500/50 focus:outline-none"
+              className="w-full rounded-[20px] border border-white/15 bg-black/30 p-3 text-sm text-white placeholder-slate-500 transition-colors focus:border-amber-500/50 focus:outline-none"
             />
           </div>
 
@@ -219,7 +221,7 @@ export default function InheritanceForm({ address }: { address: string }) {
                 onChange={(e) => setDepositAmount(e.target.value)}
                 step="0.01"
                 min="0"
-                className="min-w-[140px] flex-1 rounded-2xl border border-white/15 bg-black/30 p-3 text-sm text-white transition-colors focus:border-amber-500/50 focus:outline-none"
+                className="min-w-[140px] flex-1 rounded-[20px] border border-white/15 bg-black/30 p-3 text-sm text-white transition-colors focus:border-amber-500/50 focus:outline-none"
               />
               <div className="flex gap-1">
                 {["0.01", "0.1", "1.0"].map((value) => (
@@ -240,20 +242,20 @@ export default function InheritanceForm({ address }: { address: string }) {
           </div>
 
           {parseError ? (
-            <div className="mt-3 rounded-xl border border-red-500/30 bg-red-900/20 p-3">
+            <div className="mt-3 rounded-[20px] border border-red-500/30 bg-red-900/20 p-3">
               <p className="text-xs text-red-400">{parseError}</p>
             </div>
           ) : null}
 
           {actionError ? (
-            <div className="mt-3 rounded-xl border border-amber-500/30 bg-amber-900/20 p-4">
+            <div className="mt-3 rounded-[20px] border border-amber-500/30 bg-amber-900/20 p-4">
               <p className="text-sm font-bold text-amber-300">Before wallet confirmation</p>
               <p className="mt-1 text-xs leading-6 text-amber-100/80">{actionError}</p>
             </div>
           ) : null}
 
           {writeError ? (
-            <div className="mt-3 rounded-xl border border-red-500/30 bg-red-900/20 p-4">
+            <div className="mt-3 rounded-[20px] border border-red-500/30 bg-red-900/20 p-4">
               <p className="text-sm font-bold text-red-400">Transaction failed</p>
               <p className="mt-1 break-words text-xs text-gray-500">
                 {writeError.message?.slice(0, 200)}

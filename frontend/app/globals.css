@@ -25,9 +25,9 @@ body {
 
 body {
   background:
-    radial-gradient(circle at top, rgba(168, 205, 255, 0.22), transparent 26%),
-    radial-gradient(circle at 85% 18%, rgba(212, 168, 83, 0.1), transparent 18%),
-    linear-gradient(180deg, #f8fbff 0%, #eef4fb 20%, #1d2a3f 58%, #06070f 100%);
+    radial-gradient(circle at top, rgba(156, 214, 255, 0.24), transparent 24%),
+    radial-gradient(circle at 85% 18%, rgba(212, 168, 83, 0.12), transparent 16%),
+    linear-gradient(180deg, #f8fbff 0%, #eff6ff 18%, #253552 56%, #06070f 100%);
   color: var(--foreground);
   overflow-x: hidden;
 }

@@ -25,11 +25,11 @@ export default function BeneficiaryPreview({
   const isValid = totalCheck === 10000;
 
   return (
-    <div className="animate-fade-in rounded-[28px] border border-white/10 bg-white/5 p-6">
-      <div className="mb-4 flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-center">
+    <div className="animate-fade-in rounded-[32px] border border-white/10 bg-white/5 p-6">
+      <div className="mb-5 flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-center">
         <div>
-          <h3 className="text-sm font-bold">AI Structured Your Plan</h3>
-          <p className="mt-0.5 text-xs text-gray-500">
+          <h3 className="text-lg font-bold text-white">AI Structured Your Plan</h3>
+          <p className="mt-1 text-sm text-gray-400">
             Review before anchoring on Etherlink
           </p>
         </div>
@@ -44,15 +44,15 @@ export default function BeneficiaryPreview({
         )}
       </div>
 
-      <div className="mb-5 space-y-2">
+      <div className="mb-5 space-y-3">
         {beneficiaries.map((beneficiary, index) => (
           <div
             key={`${beneficiary.address}-${index}`}
-            className="flex flex-col gap-3 rounded-2xl border border-white/10 bg-black/30 px-4 py-4 sm:flex-row sm:items-center sm:justify-between"
+            className="flex flex-col gap-3 rounded-[24px] border border-white/10 bg-black/30 px-5 py-4 sm:flex-row sm:items-center sm:justify-between"
           >
             <div>
-              <p className="text-sm font-bold capitalize">{beneficiary.label}</p>
-              <p className="mt-0.5 font-mono text-[10px] text-gray-500">
+              <p className="text-base font-semibold capitalize text-white">{beneficiary.label}</p>
+              <p className="mt-1 font-mono text-[11px] text-gray-500">
                 {beneficiary.address.slice(0, 10)}...{beneficiary.address.slice(-8)}
               </p>
             </div>
@@ -73,7 +73,7 @@ export default function BeneficiaryPreview({
         ))}
       </div>
 
-      <div className="mb-5 space-y-2 rounded-xl border border-white/10 bg-black/40 p-4">
+      <div className="mb-5 space-y-2 rounded-[24px] border border-white/10 bg-black/40 p-5">
         <div className="flex justify-between text-xs">
           <span className="text-gray-400">Initial balance</span>
           <span className="font-bold text-white">{depositAmount} XTZ</span>
@@ -100,14 +100,14 @@ export default function BeneficiaryPreview({
         <button
           onClick={onEdit}
           disabled={isLoading}
-          className="flex-1 rounded-xl border border-white/20 bg-white/10 py-3 text-sm font-medium transition-all hover:bg-white/15"
+          className="flex-1 rounded-full border border-white/20 bg-white/10 py-3 text-sm font-medium transition-all hover:bg-white/15"
         >
           ← Edit Plan
         </button>
         <button
           onClick={onConfirm}
           disabled={isLoading || !isValid}
-          className="flex-[2] rounded-xl bg-amber-500 py-3 text-sm font-bold text-black transition-all hover:bg-amber-400 disabled:cursor-not-allowed disabled:opacity-50"
+          className="flex-[2] rounded-full bg-amber-500 py-3 text-sm font-bold text-black transition-all hover:bg-amber-400 disabled:cursor-not-allowed disabled:opacity-50"
         >
           {isLoading ? (
             <span className="flex items-center justify-center gap-2">
