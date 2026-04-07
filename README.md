@@ -2,6 +2,8 @@
 
 > AI-powered access continuity on Etherlink (Tezos EVM)
 
+Copyright (c) 2026 Gizdusum. Licensed under Apache-2.0.
+
 **Built for the [Tezos EVM AI Hackathon](https://tezosevm.nowmedia.co) · April 2026**
 
 ---
