@@ -1,8 +1,15 @@
 import Image from "next/image";
 
 type Language = "en" | "tr";
+type Theme = "dark" | "light";
 
-export default function Footer({ language = "en" }: { language?: Language }) {
+export default function Footer({
+  language = "en",
+  theme = "dark",
+}: {
+  language?: Language;
+  theme?: Theme;
+}) {
   const copy = {
     en: {
       built: "Built by Gizdusum for Tezos EVM AI Hackathon 2026",
@@ -27,11 +34,11 @@ export default function Footer({ language = "en" }: { language?: Language }) {
       <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 text-xs text-[var(--text-muted)] lg:flex-row">
         <div className="flex items-center gap-3">
           <Image
-            src="/lastkey-logo-white.png"
+            src={theme === "light" ? "/lastkey-logo.png" : "/lastkey-logo-white.png"}
             alt="LastKey"
-            width={110}
-            height={30}
-            className="h-7 w-auto rounded-xl object-cover object-center"
+            width={132}
+            height={40}
+            className="h-8 w-auto rounded-xl object-cover object-center"
           />
           <span>{copy.built}</span>
         </div>

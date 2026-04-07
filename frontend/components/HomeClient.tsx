@@ -25,20 +25,20 @@ const copy = {
     },
     hero: {
       badge: "TEZOS EVM HACKATHON 2026",
-      title1: "Protect access.",
-      title2: "Keep your vault",
-      title3: "reachable by design.",
+      title1: "Built for what comes last.",
+      title2: "Your wallet shouldn't die",
+      title3: "with you.",
       body:
-        "LastKey turns plain-language continuity rules into an onchain vault system on Etherlink. It feels calm on the surface, but every important action still resolves onchain.",
+        "LastKey is an AI-powered access continuity protocol on Etherlink, designed to keep value reachable when life stops being predictable.",
       kicker:
-        "Define the heirs, keep checking in, and let Etherlink enforce the final instruction if your continuity window expires.",
+        "Set one clear beneficiary plan, keep checking in when you can, and let Etherlink enforce the final instruction only when that protection window truly ends.",
       cta: "Open Vault Console",
       ctaDisconnected: "Connect Wallet",
       secondary: "Explore How It Works",
       powered: "Powered by Etherlink (Tezos EVM) · AI-guided · Self-custodial",
       protocolTitle: "Protocol overview",
       protocolCopy:
-        "A premium continuity rail for crypto holders who want verifiable execution instead of manual recovery promises.",
+        "A continuity rail for people who want cryptographic certainty instead of offchain promises.",
     },
     stats: {
       assets: "Assets at risk",
@@ -125,7 +125,7 @@ const copy = {
       kicker:
         "Mirasçı adreslerini tanımla, düzenli check-in yap ve süre dolarsa Etherlink'in son talimatı uygulamasına izin ver.",
       cta: "Vault Panelini Aç",
-      ctaDisconnected: "Cüzdanı Bağla",
+      ctaDisconnected: "Connect Wallet",
       secondary: "Nasıl Çalıştığını Gör",
       powered: "Etherlink (Tezos EVM) ile çalışır · AI destekli · Self-custodial",
       protocolTitle: "Protokol özeti",
@@ -256,17 +256,17 @@ export default function HomeClient() {
         <div className="topbar-inner">
           <div className="brand-shell">
             <Image
-              src="/lastkey-logo.png"
+              src={theme === "light" ? "/lastkey-logo.png" : "/lastkey-logo-white.png"}
               alt="LastKey"
-              width={168}
-              height={48}
+              width={212}
+              height={64}
               priority
-              className="h-11 w-auto rounded-2xl"
+              className="h-12 w-auto rounded-2xl sm:h-14"
             />
             <div className="hidden md:block">
               <div className="font-display text-lg font-bold text-[var(--text-primary)]">LastKey</div>
               <div className="text-sm text-[var(--text-secondary)]">
-                Access continuity for assets that matter.
+                Built for what comes last.
               </div>
             </div>
           </div>
@@ -342,12 +342,12 @@ export default function HomeClient() {
                     <span className="section-badge">✦ {t.hero.badge} ✦</span>
 
                     <div className="space-y-5">
-                      <h1 className="section-title max-w-4xl text-[clamp(3.6rem,8vw,6.7rem)] leading-[0.88]">
+                      <h1 className="section-title max-w-5xl text-[clamp(4rem,8vw,6.9rem)] leading-[0.86]">
                         <span className="block">{t.hero.title1}</span>
                         <span className="text-gradient block animate-sheen">{t.hero.title2}</span>
                         <span className="text-gradient block animate-sheen">{t.hero.title3}</span>
                       </h1>
-                      <p className="max-w-2xl text-lg leading-8 text-[var(--text-secondary)]">
+                      <p className="max-w-2xl text-xl leading-9 text-[var(--text-secondary)]">
                         {t.hero.body}
                       </p>
                       <p className="max-w-xl text-sm leading-7 text-[var(--text-muted)]">
@@ -559,7 +559,7 @@ export default function HomeClient() {
         </div>
       </section>
 
-      <Footer language={language} />
+      <Footer language={language} theme={theme} />
     </main>
   );
 }
