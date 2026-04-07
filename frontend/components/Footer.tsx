@@ -14,7 +14,7 @@ export default function Footer({
     en: {
       built: "Built by Gizdusum for Tezos EVM AI Hackathon 2026",
       contract: "Contract ↗",
-      faucet: "Get Test XTZ ↗",
+      faucet: "Get Faucet XTZ ↗",
       github: "GitHub ↗",
       x: "X ↗",
       powered: "Secured by Etherlink · Guided by GPT-4o",
@@ -22,7 +22,7 @@ export default function Footer({
     tr: {
       built: "Gizdusum tarafından Tezos EVM AI Hackathon 2026 için geliştirildi",
       contract: "Kontrat ↗",
-      faucet: "Test XTZ Al ↗",
+      faucet: "Faucet XTZ Al ↗",
       github: "GitHub ↗",
       x: "X ↗",
       powered: "Etherlink ile güvence altında · GPT-4o ile desteklenir",
@@ -61,7 +61,7 @@ export default function Footer({
             {copy.faucet}
           </a>
           <a
-            href="https://x.com/search?q=LastKey%20Etherlink&src=typed_query"
+            href="https://x.com/gizdusumandnode"
             target="_blank"
             rel="noopener noreferrer"
             className="footer-link"
@@ -69,7 +69,7 @@ export default function Footer({
             {copy.x}
           </a>
           <a
-            href="https://github.com/gizdusum/lastkey"
+            href="https://github.com/gizdusum"
             target="_blank"
             rel="noopener noreferrer"
             className="footer-link"
