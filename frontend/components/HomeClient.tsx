@@ -25,7 +25,7 @@ const copy = {
     },
     hero: {
       badge: "TEZOS EVM HACKATHON 2026",
-      title1: "Built for what comes last.",
+      title1: "Built for what comes __LAST__.",
       title2: "Your crypto shouldn't die with you.",
       title3: "",
       body:
@@ -47,60 +47,60 @@ const copy = {
     },
     quick: {
       readiness: "System readiness",
-      parser: "AI parser online",
-      parserDesc: "Natural language becomes structured beneficiaries.",
-      contract: "Contract armed",
-      contractDesc: "Etherlink vault logic stays visible and inspectable.",
-      agent: "Agent cycle",
-      agentDesc: "Daily monitoring and check-in reminder flow.",
+      parser: "Structured intent",
+      parserDesc: "Plain English becomes beneficiary wallets, shares, and threshold rules.",
+      contract: "Activity-aware vault",
+      contractDesc: "Manual check-ins and qualified wallet activity both protect the vault.",
+      agent: "Execution guardrail",
+      agentDesc: "Execution happens only after the full window passes without a valid signal.",
     },
     how: {
       badge: "Flow",
-      title: "A simple route from intent to execution.",
+      title: "Three signals. One final rule.",
       body:
-        "LastKey keeps the interface human while the hard guarantees stay onchain. You write the plan once, review the structure, and keep your continuity window alive with a single check-in.",
+        "LastKey now works in layers: a manual check-in, detected wallet activity, and qualified auto-reset logic. Funds move only when the full protection window passes without a valid signal.",
       steps: [
         {
-          title: "Describe your plan",
-          desc: "Say who receives what, in plain English.",
+          title: "Manual check-in",
+          desc: "You can always reset the protection window yourself with a direct onchain confirmation.",
         },
         {
-          title: "AI structures it",
-          desc: "Wallets, percentages, labels, and thresholds become clean contract parameters.",
+          title: "Onchain activity detected",
+          desc: "The agent watches for real outbound wallet activity and shows that signal inside LastKey.",
         },
         {
-          title: "Stay checked in",
-          desc: "A single onchain ping resets your protection window.",
+          title: "Qualified activity can reset",
+          desc: "Signed outbound activity can refresh the timer even if you never open the site.",
         },
         {
-          title: "Execute only if needed",
-          desc: "If the window expires, the contract distributes exactly what you approved.",
+          title: "Execution only after full inactivity",
+          desc: "Beneficiaries receive funds only if no manual or qualified signal appears for the full threshold.",
         },
       ],
     },
     security: {
       badge: "Security",
-      title: "Built like a protocol, not a landing page demo.",
+      title: "Clear rules, verifiable execution.",
       body:
-        "The UI stays elegant, but the trust model is explicit. Wallet signatures stay client-side, contract state stays queryable, and the execution flow remains tied to Etherlink.",
+        "LastKey makes the conditions legible. What counts as activity is explicit, the reset source is visible, and execution stays tied to onchain rules on Etherlink.",
       cards: [
         {
-          title: "Onchain state",
-          desc: "Vault status, beneficiaries, and timers remain readable from the contract itself.",
+          title: "What counts as alive",
+          desc: "Manual check-ins and qualified signed wallet activity both count as protection signals.",
         },
         {
-          title: "Self-custodial",
-          desc: "You keep the wallet. LastKey never turns into a custodial recovery service.",
+          title: "What does not count",
+          desc: "Passive noise or the absence of a qualified signal will not keep the continuity window alive.",
         },
         {
-          title: "AI with guardrails",
-          desc: "AI structures the intent, but the final action is still a wallet-approved onchain transaction.",
+          title: "When beneficiaries receive funds",
+          desc: "Only after the warning stage and the full inactivity window expire without a valid reset.",
         },
       ],
     },
     vault: {
       title: "Your LastKey Vault",
-      subtitle: "Open the console to review status, structure beneficiaries, and keep your continuity rail alive.",
+      subtitle: "Review your protection window, see which signals count, and track whether activity was manual, detected, or auto-reset.",
       badge: "Protected by Etherlink",
       empty: "Connect your wallet to configure the vault console.",
     },
@@ -148,51 +148,51 @@ const copy = {
     },
     how: {
       badge: "Akış",
-      title: "Niyetten icraya sade bir rota.",
+      title: "Üç sinyal. Tek nihai kural.",
       body:
-        "LastKey arayüzü insani kalır, sert garantiler ise zincirde durur. Planı bir kez yazarsın, yapıyı gözden geçirirsin ve koruma penceresini tek bir check-in ile yenilersin.",
+        "LastKey artık katmanlı çalışır: manuel check-in, algılanan wallet aktivitesi ve qualified auto-reset mantığı. Fonlar yalnızca tam koruma penceresi geçerse hareket eder.",
       steps: [
         {
-          title: "Planını tanımla",
-          desc: "Kime ne gideceğini doğal dille yaz.",
+          title: "Manuel check-in",
+          desc: "Koruma penceresini her zaman doğrudan onchain onayla sıfırlayabilirsin.",
         },
         {
-          title: "AI yapılandırsın",
-          desc: "Adresler, yüzdeler, etiketler ve eşikler kontrat parametresine dönüşür.",
+          title: "Onchain aktivite algılanır",
+          desc: "Agent gerçek outbound wallet aktivitesini izler ve bunu LastKey içinde gösterir.",
         },
         {
-          title: "Check-in yap",
-          desc: "Tek bir onchain ping koruma penceresini sıfırlar.",
+          title: "Qualified aktivite resetler",
+          desc: "İmzalı outbound activity, site açılmasa bile timer'ı yenileyebilir.",
         },
         {
-          title: "Gerekirse uygula",
-          desc: "Süre dolarsa kontrat yalnızca senin onayladığın dağıtımı yapar.",
+          title: "Tam hareketsizlikte icra",
+          desc: "Mirasçılar yalnızca tam eşik süresi boyunca geçerli sinyal gelmezse ödeme alır.",
         },
       ],
     },
     security: {
       badge: "Güvenlik",
-      title: "Landing page demosu gibi değil, protokol gibi tasarlandı.",
+      title: "Kurallar net, icra doğrulanabilir.",
       body:
-        "Arayüz şık kalır ama güven modeli nettir. İmzalar tarayıcı tarafında kalır, kontrat durumu sorgulanabilir olur ve execution akışı Etherlink'e bağlı kalır.",
+        "LastKey koşulları okunur hale getirir. Neyin activity sayıldığı açıktır, reset kaynağı görünürdür ve execution Etherlink üzerindeki kurallara bağlı kalır.",
       cards: [
         {
-          title: "Onchain state",
-          desc: "Vault durumu, beneficiary listesi ve sayaç doğrudan kontrattan okunur.",
+          title: "Yaşıyor sinyali nedir",
+          desc: "Manuel check-in ve qualified signed wallet activity koruma sinyali sayılır.",
         },
         {
-          title: "Self-custodial",
-          desc: "Cüzdan sende kalır. LastKey saklama hizmetine dönüşmez.",
+          title: "Neler sayılmaz",
+          desc: "Pasif gürültü ya da qualified olmayan hareket continuity penceresini açık tutmaz.",
         },
         {
-          title: "AI + guardrails",
-          desc: "AI niyeti yapılandırır; son adım yine cüzdan onaylı onchain işlemdir.",
+          title: "Mirasçılar ne zaman alır",
+          desc: "Yalnızca warning aşaması ve tam inactivity eşiği geçerli reset olmadan tamamlanırsa.",
         },
       ],
     },
     vault: {
       title: "LastKey Vault",
-      subtitle: "Durumu gözden geçir, miras planını yapılandır ve continuity rail'i aktif tut.",
+      subtitle: "Koruma penceresini, hangi sinyalin geçerli olduğunu ve aktivitenin manuel mi agent tarafından mı algılandığını gör.",
       badge: "Etherlink tarafından korunuyor",
       empty: "Vault panelini yapılandırmak için cüzdanını bağla.",
     },
@@ -343,7 +343,9 @@ export default function HomeClient() {
 
                     <div className="space-y-5">
                       <h1 className="section-title max-w-5xl text-[clamp(4.15rem,8vw,7rem)] leading-[0.86]">
-                        <span className="block">{t.hero.title1}</span>
+                        <span className="block">
+                          {renderHeroTitle(t.hero.title1)}
+                        </span>
                       </h1>
                       <p className="text-gradient max-w-3xl text-[clamp(1.7rem,3vw,2.65rem)] font-semibold leading-[1.08] animate-sheen">
                         {t.hero.title2}
@@ -562,5 +564,18 @@ export default function HomeClient() {
 
       <Footer language={language} theme={theme} />
     </main>
+  );
+}
+
+function renderHeroTitle(title: string) {
+  const parts = title.split("__LAST__");
+  if (parts.length === 1) return title;
+
+  return (
+    <>
+      {parts[0]}
+      <span className="text-gradient">last</span>
+      {parts[1]}
+    </>
   );
 }
