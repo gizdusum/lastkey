@@ -29,16 +29,16 @@ const copy = {
       title2: "Your crypto shouldn't die with you.",
       title3: "",
       body:
-        "LastKey is an AI-powered access continuity protocol on Etherlink, designed to keep value reachable when life stops being predictable.",
+        "AI-powered access continuity on Etherlink.",
       kicker:
-        "LastKey watches for manual check-ins and qualified onchain wallet activity, sends a warning from lastkeyxyz@gmail.com at day 293, and only allows execution after the full 300-day window passes without a valid signal.",
+        "Set one plan. LastKey watches the signal. Etherlink enforces the rule.",
       cta: "Open Vault Console",
       ctaDisconnected: "Connect Wallet",
       secondary: "Explore How It Works",
       powered: "Powered by Etherlink (Tezos EVM) · AI-guided · Self-custodial",
       protocolTitle: "Protocol overview",
       protocolCopy:
-        "A continuity rail built to prove, onchain, when protection is still active and when execution is truly allowed.",
+        "A continuity rail that makes protection, warning, and execution rules legible onchain.",
     },
     stats: {
       assets: "Assets at risk",
@@ -51,6 +51,8 @@ const copy = {
       parserDesc: "Plain English becomes beneficiary wallets, shares, and threshold rules.",
       contract: "Activity-aware vault",
       contractDesc: "Manual check-ins and watched onchain wallet activity both keep the rail alive.",
+      monitor: "Watched onchain",
+      monitorDesc: "Qualified wallet activity is tracked and surfaced inside the vault.",
       agent: "Execution guardrail",
       agentDesc: "A day-293 warning email goes out before any day-300 execution can happen.",
     },
@@ -143,6 +145,8 @@ const copy = {
       parserDesc: "Doğal dil beneficiary yapısına dönüşür.",
       contract: "Kontrat hazır",
       contractDesc: "Etherlink vault mantığı şeffaf ve denetlenebilir kalır.",
+      monitor: "Onchain izleme",
+      monitorDesc: "Qualified wallet activity izlenir ve vault içinde görünür olur.",
       agent: "Agent döngüsü",
       agentDesc: "Günlük izleme ve check-in uyarı akışı.",
     },
@@ -327,30 +331,12 @@ export default function HomeClient() {
                       <p className="text-gradient max-w-3xl text-[clamp(1.7rem,3vw,2.65rem)] font-semibold leading-[1.08] animate-sheen">
                         {t.hero.title2}
                       </p>
-                      <p className="max-w-2xl text-xl leading-9 text-[var(--text-secondary)]">
-                        {t.hero.body}
-                      </p>
+                    <p className="max-w-2xl text-xl leading-9 text-[var(--text-secondary)]">
+                      {t.hero.body}
+                    </p>
                     <p className="max-w-xl text-sm leading-7 text-[var(--text-muted)]">
                       {t.hero.kicker}
                     </p>
-                    <div className="grid max-w-3xl gap-3 sm:grid-cols-2">
-                      <div className="rounded-[20px] border border-[var(--border-subtle)] bg-[rgba(74,143,232,0.06)] px-4 py-4">
-                        <div className="font-mono text-[10px] uppercase tracking-[0.24em] text-[var(--blue-soft)]">
-                          Onchain activity watched
-                        </div>
-                        <p className="mt-2 text-sm leading-6 text-[var(--text-secondary)]">
-                          LastKey watches qualified outbound wallet activity and shows that protection signal inside the vault console.
-                        </p>
-                      </div>
-                      <div className="rounded-[20px] border border-[var(--border-subtle)] bg-[rgba(200,169,110,0.08)] px-4 py-4">
-                        <div className="font-mono text-[10px] uppercase tracking-[0.24em] text-[var(--gold-strong)]">
-                          Day 293 warning
-                        </div>
-                        <p className="mt-2 text-sm leading-6 text-[var(--text-secondary)]">
-                          A warning email is sent from lastkeyxyz@gmail.com before day 300, giving the owner one last chance to reset the vault.
-                        </p>
-                      </div>
-                    </div>
                   </div>
 
                     <div className="flex flex-wrap items-center gap-4">
@@ -404,6 +390,7 @@ export default function HomeClient() {
                       {[
                         { title: t.quick.parser, desc: t.quick.parserDesc, tone: "var(--blue-primary)" },
                         { title: t.quick.contract, desc: t.quick.contractDesc, tone: "var(--gold-strong)" },
+                        { title: t.quick.monitor, desc: t.quick.monitorDesc, tone: "var(--blue-soft)" },
                         { title: t.quick.agent, desc: t.quick.agentDesc, tone: "var(--success)" },
                       ].map((item) => (
                         <div
