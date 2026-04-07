@@ -39,6 +39,7 @@ function getOwnerState(store, owner) {
       lastCheckedBlock: null,
       lastDetectedActivityTimestamp: null,
       lastQualifiedActivityTimestamp: null,
+      welcomeEmailSent: false,
     };
   }
 

@@ -31,14 +31,14 @@ const copy = {
       body:
         "LastKey is an AI-powered access continuity protocol on Etherlink, designed to keep value reachable when life stops being predictable.",
       kicker:
-        "Set one clear beneficiary plan, keep checking in when you can, and let Etherlink enforce the final instruction only when that protection window truly ends.",
+        "LastKey watches for manual check-ins and qualified onchain wallet activity, sends a warning from lastkeyxyz@gmail.com at day 293, and only allows execution after the full 300-day window passes without a valid signal.",
       cta: "Open Vault Console",
       ctaDisconnected: "Connect Wallet",
       secondary: "Explore How It Works",
       powered: "Powered by Etherlink (Tezos EVM) · AI-guided · Self-custodial",
       protocolTitle: "Protocol overview",
       protocolCopy:
-        "A continuity rail for people who want cryptographic certainty instead of offchain promises.",
+        "A continuity rail built to prove, onchain, when protection is still active and when execution is truly allowed.",
     },
     stats: {
       assets: "Assets at risk",
@@ -50,15 +50,15 @@ const copy = {
       parser: "Structured intent",
       parserDesc: "Plain English becomes beneficiary wallets, shares, and threshold rules.",
       contract: "Activity-aware vault",
-      contractDesc: "Manual check-ins and qualified wallet activity both protect the vault.",
+      contractDesc: "Manual check-ins and watched onchain wallet activity both keep the rail alive.",
       agent: "Execution guardrail",
-      agentDesc: "Execution happens only after the full window passes without a valid signal.",
+      agentDesc: "A day-293 warning email goes out before any day-300 execution can happen.",
     },
     how: {
       badge: "Flow",
       title: "Three signals. One final rule.",
       body:
-        "LastKey now works in layers: a manual check-in, detected wallet activity, and qualified auto-reset logic. Funds move only when the full protection window passes without a valid signal.",
+        "LastKey now works in layers: manual check-in, detected onchain activity, and qualified auto-reset logic. Funds move only when the full protection window passes without a valid signal.",
       steps: [
         {
           title: "Manual check-in",
@@ -66,7 +66,7 @@ const copy = {
         },
         {
           title: "Onchain activity detected",
-          desc: "The agent watches for real outbound wallet activity and shows that signal inside LastKey.",
+          desc: "The agent watches real outbound wallet activity and surfaces that signal directly in LastKey.",
         },
         {
           title: "Qualified activity can reset",
@@ -74,7 +74,7 @@ const copy = {
         },
         {
           title: "Execution only after full inactivity",
-          desc: "Beneficiaries receive funds only if no manual or qualified signal appears for the full threshold.",
+          desc: "Day 293 triggers a warning email. Beneficiaries receive funds only if no valid signal appears by day 300.",
         },
       ],
     },
@@ -82,7 +82,7 @@ const copy = {
       badge: "Security",
       title: "Clear rules, verifiable execution.",
       body:
-        "LastKey makes the conditions legible. What counts as activity is explicit, the reset source is visible, and execution stays tied to onchain rules on Etherlink.",
+        "LastKey makes the conditions legible. Onchain activity is watched, the reset source stays visible, and execution remains locked to Etherlink rules only.",
       cards: [
         {
           title: "What counts as alive",
@@ -93,8 +93,8 @@ const copy = {
           desc: "Passive noise or the absence of a qualified signal will not keep the continuity window alive.",
         },
         {
-          title: "When beneficiaries receive funds",
-          desc: "Only after the warning stage and the full inactivity window expire without a valid reset.",
+          title: "Day 293 and day 300",
+          desc: "LastKey sends a warning email from lastkeyxyz@gmail.com at day 293 and only permits execution after the full inactivity window expires.",
         },
       ],
     },
@@ -201,25 +201,19 @@ const copy = {
 
 export default function HomeClient() {
   const { address, isConnected } = useAccount();
-  const [language, setLanguage] = useState<Language>("en");
+  const [language] = useState<Language>("en");
   const [theme, setTheme] = useState<Theme>("dark");
   const [view, setView] = useState<View>("overview");
 
   useEffect(() => {
     const savedTheme = window.localStorage.getItem("lastkey-theme") as Theme | null;
-    const savedLanguage = window.localStorage.getItem("lastkey-language") as Language | null;
     if (savedTheme === "dark" || savedTheme === "light") setTheme(savedTheme);
-    if (savedLanguage === "en" || savedLanguage === "tr") setLanguage(savedLanguage);
   }, []);
 
   useEffect(() => {
     document.body.dataset.theme = theme;
     window.localStorage.setItem("lastkey-theme", theme);
   }, [theme]);
-
-  useEffect(() => {
-    window.localStorage.setItem("lastkey-language", language);
-  }, [language]);
 
   useEffect(() => {
     if (!isConnected && view === "vault") {
@@ -285,23 +279,6 @@ export default function HomeClient() {
           </div>
 
           <div className="flex items-center gap-2 sm:gap-3">
-            <div className="toggle-pill hidden sm:inline-flex">
-              <button
-                type="button"
-                onClick={() => setLanguage("en")}
-                className={language === "en" ? "active" : ""}
-              >
-                EN
-              </button>
-              <button
-                type="button"
-                onClick={() => setLanguage("tr")}
-                className={language === "tr" ? "active" : ""}
-              >
-                TR
-              </button>
-            </div>
-
             <div className="toggle-pill hidden md:inline-flex">
               <button
                 type="button"
@@ -353,10 +330,28 @@ export default function HomeClient() {
                       <p className="max-w-2xl text-xl leading-9 text-[var(--text-secondary)]">
                         {t.hero.body}
                       </p>
-                      <p className="max-w-xl text-sm leading-7 text-[var(--text-muted)]">
-                        {t.hero.kicker}
-                      </p>
+                    <p className="max-w-xl text-sm leading-7 text-[var(--text-muted)]">
+                      {t.hero.kicker}
+                    </p>
+                    <div className="grid max-w-3xl gap-3 sm:grid-cols-2">
+                      <div className="rounded-[20px] border border-[var(--border-subtle)] bg-[rgba(74,143,232,0.06)] px-4 py-4">
+                        <div className="font-mono text-[10px] uppercase tracking-[0.24em] text-[var(--blue-soft)]">
+                          Onchain activity watched
+                        </div>
+                        <p className="mt-2 text-sm leading-6 text-[var(--text-secondary)]">
+                          LastKey watches qualified outbound wallet activity and shows that protection signal inside the vault console.
+                        </p>
+                      </div>
+                      <div className="rounded-[20px] border border-[var(--border-subtle)] bg-[rgba(200,169,110,0.08)] px-4 py-4">
+                        <div className="font-mono text-[10px] uppercase tracking-[0.24em] text-[var(--gold-strong)]">
+                          Day 293 warning
+                        </div>
+                        <p className="mt-2 text-sm leading-6 text-[var(--text-secondary)]">
+                          A warning email is sent from lastkeyxyz@gmail.com before day 300, giving the owner one last chance to reset the vault.
+                        </p>
+                      </div>
                     </div>
+                  </div>
 
                     <div className="flex flex-wrap items-center gap-4">
                       {isConnected ? (

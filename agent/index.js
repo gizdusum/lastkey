@@ -10,6 +10,9 @@
 
 require("dotenv").config();
 const cron = require("node-cron");
+const http = require("http");
+const fs = require("fs");
+const path = require("path");
 const { ethers } = require("ethers");
 const { checkAllVaults } = require("./monitor");
 
@@ -43,6 +46,61 @@ if (missingOptionalEnv.length > 0) {
 
 const provider = new ethers.JsonRpcProvider(process.env.ETHERLINK_RPC_URL);
 const agentWallet = new ethers.Wallet(process.env.AGENT_PRIVATE_KEY, provider);
+const HEALTH_PORT = Number(process.env.HEALTH_PORT || 8789);
+const HEALTH_PATH = path.join(__dirname, "data", "health.json");
+const healthState = {
+  status: "starting",
+  startedAt: new Date().toISOString(),
+  lastCycleStartedAt: null,
+  lastCycleCompletedAt: null,
+  lastCycleStatus: null,
+  lastResult: null,
+  lastError: null,
+};
+
+function persistHealthState() {
+  const dir = path.dirname(HEALTH_PATH);
+  fs.mkdirSync(dir, { recursive: true });
+  fs.writeFileSync(
+    HEALTH_PATH,
+    JSON.stringify(
+      {
+        ...healthState,
+        uptimeSeconds: Math.floor((Date.now() - Date.parse(healthState.startedAt)) / 1000),
+      },
+      null,
+      2
+    )
+  );
+}
+
+function startHealthServer() {
+  const server = http.createServer((req, res) => {
+    if (!req.url || (req.url !== "/health" && req.url !== "/")) {
+      res.writeHead(404, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ ok: false, error: "not_found" }));
+      return;
+    }
+
+    res.writeHead(200, { "Content-Type": "application/json" });
+    res.end(
+      JSON.stringify(
+        {
+          ok: true,
+          service: "lastkey-agent",
+          ...healthState,
+          uptimeSeconds: Math.floor((Date.now() - Date.parse(healthState.startedAt)) / 1000),
+        },
+        null,
+        2
+      )
+    );
+  });
+
+  server.listen(HEALTH_PORT, () => {
+    console.log(`🩺 Health endpoint active — http://127.0.0.1:${HEALTH_PORT}/health`);
+  });
+}
 
 async function startup() {
   const network = await provider.getNetwork();
@@ -61,11 +119,18 @@ async function startup() {
     console.warn("⚠️  Agent wallet has no XTZ. It cannot send transactions.");
     console.warn("   Fund agent wallet before running in production.\n");
   }
+
+  healthState.status = "online";
+  persistHealthState();
 }
 
 async function runCycle() {
   const timestamp = new Date().toISOString();
   console.log(`\n[${timestamp}] Starting vault monitoring cycle...`);
+  healthState.lastCycleStartedAt = timestamp;
+  healthState.lastCycleStatus = "running";
+  healthState.lastError = null;
+  persistHealthState();
 
   try {
     const result = await checkAllVaults(agentWallet);
@@ -76,14 +141,23 @@ async function runCycle() {
         console.log(`  Activities     : ${result.activitiesDetected}`);
         console.log(`  Auto resets    : ${result.autoResets}`);
         console.log(`  Errors         : ${result.errors}`);
+    healthState.lastCycleCompletedAt = new Date().toISOString();
+    healthState.lastCycleStatus = "ok";
+    healthState.lastResult = result;
+    persistHealthState();
   } catch (err) {
     console.error(`[${timestamp}] Cycle failed:`, err.message);
+    healthState.lastCycleCompletedAt = new Date().toISOString();
+    healthState.lastCycleStatus = "failed";
+    healthState.lastError = err.message;
+    persistHealthState();
   }
 }
 
 const isTestMode = process.argv.includes("--test");
 
 startup().then(() => {
+  startHealthServer();
   if (isTestMode) {
     console.log("🧪 TEST MODE — Running single cycle immediately...\n");
     runCycle().then(() => {

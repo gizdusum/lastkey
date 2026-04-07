@@ -12,3 +12,4 @@ coverage/
 artifacts/
 cache/
 agent/data/
+agent/logs/

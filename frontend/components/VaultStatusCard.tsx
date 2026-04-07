@@ -65,6 +65,9 @@ export default function VaultStatus({ address, language = "en" }: VaultStatusPro
       resetAgent: "Auto-reset by agent",
       resetNone: "No reset source",
       activityRail: "Activity rail",
+      executionRule: "Execution rule",
+      executionRuleBody:
+        "Beneficiaries receive funds only if no manual check-in and no qualified wallet activity refresh the vault for the full protection window.",
     },
     tr: {
       noVault: "Bu cüzdan için vault bulunamadı.",
@@ -90,6 +93,9 @@ export default function VaultStatus({ address, language = "en" }: VaultStatusPro
       resetAgent: "Agent auto-reset",
       resetNone: "Reset kaynağı yok",
       activityRail: "Aktivite rayı",
+      executionRule: "İcra kuralı",
+      executionRuleBody:
+        "Mirasçılar yalnızca tam koruma penceresi boyunca manuel check-in ya da qualified wallet activity görülmezse ödeme alır.",
     },
   }[language];
 
@@ -240,6 +246,15 @@ export default function VaultStatus({ address, language = "en" }: VaultStatusPro
               <div className="mt-2 text-xs text-[var(--text-secondary)]">{card.hint}</div>
             </div>
           ))}
+        </div>
+      </div>
+
+      <div className="mt-6 rounded-[22px] border border-[var(--border-subtle)] bg-[var(--bg-panel)] px-4 py-4">
+        <div className="font-mono text-[10px] uppercase tracking-[0.24em] text-[var(--text-muted)]">
+          {copy.executionRule}
+        </div>
+        <div className="mt-3 text-sm leading-7 text-[var(--text-secondary)]">
+          {copy.executionRuleBody}
         </div>
       </div>
 

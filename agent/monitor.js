@@ -4,7 +4,7 @@
  */
 
 const { ethers } = require("ethers");
-const { sendWarningEmail, sendExecutionEmail } = require("./emailer");
+const { sendWelcomeEmail, sendWarningEmail, sendExecutionEmail } = require("./emailer");
 const { triggerExecution, markWarning, recordDetectedActivity } = require("./executor");
 const { loadActivityStore, saveActivityStore, getOwnerState } = require("./activity-store");
 const ABI = require("../frontend/public/abi/DeadDrop.json");
@@ -83,6 +83,15 @@ async function processVault(contract, provider, owner, activityStore) {
     `  [${shortAddr(owner)}] ${days} days inactive | ${balance} XTZ | warning: ${warningIssued}`
   );
 
+  const email = await getVaultEmail(contract, owner);
+
+  if (email && !detected.ownerState.welcomeEmailSent) {
+    const welcomeSent = await sendWelcomeEmail({ to: email, ownerAddress: owner });
+    if (welcomeSent) {
+      detected.ownerState.welcomeEmailSent = true;
+    }
+  }
+
   if (detected.result === "auto-reset") {
     console.log(`  [${shortAddr(owner)}] ✅ Qualified onchain activity reset the timer`);
     return "auto-reset";
@@ -96,7 +105,6 @@ async function processVault(contract, provider, owner, activityStore) {
   if (days >= EXECUTION_DAY_THRESHOLD) {
     console.log(`  [${shortAddr(owner)}] 🔴 EXECUTION THRESHOLD REACHED`);
 
-    const email = await getVaultEmail(contract, owner);
     const [wallets, percentages, labels] = await contract.getBeneficiaries(owner);
     const txHash = await triggerExecution(contract, owner);
 
@@ -118,7 +126,6 @@ async function processVault(contract, provider, owner, activityStore) {
   if (days >= WARNING_DAY_THRESHOLD && !warningIssued) {
     console.log(`  [${shortAddr(owner)}] ⚠️  WARNING THRESHOLD REACHED`);
 
-    const email = await getVaultEmail(contract, owner);
     const daysRemaining = Number(daysUntilExecution);
     const txHash = await markWarning(contract, owner);
 
@@ -146,13 +153,13 @@ async function syncDetectedActivity(contract, provider, owner, activityStore) {
   if (ownerState.lastKnownNonce === null || ownerState.lastCheckedBlock === null) {
     ownerState.lastKnownNonce = currentNonce;
     ownerState.lastCheckedBlock = Number(latestBlock.number);
-    return { result: "initialized" };
+    return { result: "initialized", ownerState };
   }
 
   ownerState.lastCheckedBlock = Number(latestBlock.number);
 
   if (currentNonce <= ownerState.lastKnownNonce) {
-    return { result: "none" };
+    return { result: "none", ownerState };
   }
 
   ownerState.lastKnownNonce = currentNonce;
@@ -167,13 +174,13 @@ async function syncDetectedActivity(contract, provider, owner, activityStore) {
   );
 
   if (!txHash) {
-    return { result: "none" };
+    return { result: "none", ownerState };
   }
 
   ownerState.lastDetectedActivityTimestamp = observedTimestamp;
   ownerState.lastQualifiedActivityTimestamp = observedTimestamp;
 
-  return { result: "auto-reset", observedTimestamp, txHash };
+  return { result: "auto-reset", observedTimestamp, txHash, ownerState };
 }
 
 async function getVaultEmail(contract, owner) {
