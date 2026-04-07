@@ -38,7 +38,7 @@ const copy = {
       powered: "Powered by Etherlink (Tezos EVM) · AI-guided · Self-custodial",
       protocolTitle: "Protocol overview",
       protocolCopy:
-        "A continuity rail that makes protection, warning, and execution rules legible onchain.",
+        "Your assets are yours today. LastKey exists so they do not become unreachable tomorrow.",
     },
     stats: {
       assets: "Assets at risk",
@@ -47,14 +47,14 @@ const copy = {
     },
     quick: {
       readiness: "System readiness",
-      parser: "Structured intent",
-      parserDesc: "Plain English becomes beneficiary wallets, shares, and threshold rules.",
-      contract: "Activity-aware vault",
-      contractDesc: "Manual check-ins and watched onchain wallet activity both keep the rail alive.",
-      monitor: "Watched onchain",
-      monitorDesc: "Qualified wallet activity is tracked and surfaced inside the vault.",
-      agent: "Execution guardrail",
-      agentDesc: "A day-293 warning email goes out before any day-300 execution can happen.",
+      parser: "Why LastKey exists",
+      parserDesc: "If something happens to you, your assets should not stay stranded forever. LastKey turns your final instruction into an onchain continuity plan.",
+      contract: "Watched onchain",
+      contractDesc: "LastKey agents watch your wallet activity on Etherlink. Real outbound activity keeps your vault alive without relying on offchain promises.",
+      monitor: "Day 293 warning",
+      monitorDesc: "If no valid activity appears for 293 days, LastKey sends a warning email from lastkeyxyz@gmail.com before the final threshold is reached.",
+      agent: "Day 300 execution",
+      agentDesc: "If your wallet shows no life for the full 300-day window, LastKey transfers the vault to the beneficiary wallet you configured. Nothing is lost. Built on Tezos.",
     },
     how: {
       badge: "Flow",
