@@ -1,5 +1,7 @@
 "use client";
 
+type Language = "en" | "tr";
+
 interface Beneficiary {
   address: string;
   percentage: number;
@@ -10,8 +12,9 @@ interface BeneficiaryPreviewProps {
   beneficiaries: Beneficiary[];
   depositAmount: string;
   onEdit: () => void;
-  onConfirm: () => void;
+  onConfirm: () => void | Promise<void>;
   isLoading: boolean;
+  language?: Language;
 }
 
 export default function BeneficiaryPreview({
@@ -20,102 +23,139 @@ export default function BeneficiaryPreview({
   onEdit,
   onConfirm,
   isLoading,
+  language = "en",
 }: BeneficiaryPreviewProps) {
   const totalCheck = beneficiaries.reduce((sum, beneficiary) => sum + beneficiary.percentage, 0);
   const isValid = totalCheck === 10000;
 
+  const copy = {
+    en: {
+      title: "AI structured your plan",
+      subtitle: "Review the vault route before sending an onchain transaction.",
+      valid: "Valid structure",
+      invalid: "Invalid structure",
+      initial: "Initial balance",
+      threshold: "Protection window",
+      warning: "Warning point",
+      execute: "Execution point",
+      network: "Network",
+      edit: "Edit plan",
+      anchor: "Anchor on Etherlink",
+      anchoring: "Anchoring on Etherlink...",
+    },
+    tr: {
+      title: "AI planını yapılandırdı",
+      subtitle: "Onchain işlemi göndermeden önce vault rotasını gözden geçir.",
+      valid: "Geçerli yapı",
+      invalid: "Geçersiz yapı",
+      initial: "Başlangıç bakiyesi",
+      threshold: "Koruma penceresi",
+      warning: "Uyarı noktası",
+      execute: "İcra noktası",
+      network: "Ağ",
+      edit: "Planı düzenle",
+      anchor: "Etherlink'e kaydet",
+      anchoring: "Etherlink'e kaydediliyor...",
+    },
+  }[language];
+
   return (
-    <div className="animate-fade-in rounded-2xl border border-white/10 bg-white/5 p-6">
-      <div className="mb-4 flex items-center justify-between">
+    <div className="panel rounded-[30px] p-6">
+      <div className="mb-5 flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
         <div>
-          <h3 className="text-sm font-bold">AI Structured Your Plan</h3>
-          <p className="mt-0.5 text-xs text-gray-500">
-            Review before anchoring on Etherlink
+          <p className="eyebrow">AI Preview</p>
+          <h3 className="card-title mt-3 text-3xl">{copy.title}</h3>
+          <p className="mt-2 max-w-xl text-sm leading-7 text-[var(--text-secondary)]">
+            {copy.subtitle}
           </p>
         </div>
-        {isValid ? (
-          <span className="rounded-full border border-green-500/20 bg-green-900/30 px-2 py-1 text-xs text-green-400">
-            ✓ Valid
-          </span>
-        ) : (
-          <span className="rounded-full border border-red-500/20 bg-red-900/30 px-2 py-1 text-xs text-red-400">
-            ✗ Invalid sum
-          </span>
-        )}
+
+        <span
+          className={`rounded-full px-3 py-2 text-xs font-medium ${
+            isValid
+              ? "border border-[rgba(75,193,132,0.24)] bg-[rgba(75,193,132,0.1)] text-[var(--success)]"
+              : "border border-[rgba(235,103,103,0.24)] bg-[rgba(235,103,103,0.1)] text-[var(--danger)]"
+          }`}
+        >
+          {isValid ? copy.valid : copy.invalid}
+        </span>
       </div>
 
-      <div className="mb-5 space-y-2">
-        {beneficiaries.map((beneficiary, index) => (
-          <div
-            key={`${beneficiary.address}-${index}`}
-            className="flex items-center justify-between rounded-xl border border-white/10 bg-black/30 px-4 py-3"
-          >
-            <div>
-              <p className="text-sm font-bold capitalize">{beneficiary.label}</p>
-              <p className="mt-0.5 font-mono text-[10px] text-gray-500">
-                {beneficiary.address.slice(0, 10)}...{beneficiary.address.slice(-8)}
-              </p>
+      <div className="grid gap-4 lg:grid-cols-[minmax(0,1.15fr)_320px]">
+        <div className="space-y-3">
+          {beneficiaries.map((beneficiary, index) => (
+            <div
+              key={`${beneficiary.address}-${index}`}
+              className="panel-soft flex items-center justify-between rounded-[22px] px-5 py-4"
+            >
+              <div>
+                <p className="text-sm font-medium capitalize text-[var(--text-primary)]">
+                  {beneficiary.label}
+                </p>
+                <p className="font-mono mt-1 text-[11px] text-[var(--text-muted)]">
+                  {beneficiary.address.slice(0, 10)}...{beneficiary.address.slice(-8)}
+                </p>
+              </div>
+              <div className="text-right">
+                <p className="font-display text-3xl font-bold text-[var(--gold-strong)]">
+                  {beneficiary.percentage / 100}%
+                </p>
+                <p className="mt-1 text-[11px] text-[var(--text-muted)]">
+                  ~
+                  {(
+                    (parseFloat(depositAmount || "0") * beneficiary.percentage) /
+                    10000
+                  ).toFixed(4)}{" "}
+                  XTZ
+                </p>
+              </div>
             </div>
-            <div className="text-right">
-              <p className="text-xl font-black text-amber-400">
-                {beneficiary.percentage / 100}%
-              </p>
-              <p className="text-[10px] text-gray-500">
-                ~
-                {(
-                  (parseFloat(depositAmount || "0") * beneficiary.percentage) /
-                  10000
-                ).toFixed(4)}{" "}
-                XTZ
-              </p>
+          ))}
+        </div>
+
+        <div className="panel-soft rounded-[24px] p-5">
+          <p className="eyebrow">Protocol</p>
+          <div className="mt-4 space-y-3 text-sm">
+            <div className="flex justify-between gap-4">
+              <span className="text-[var(--text-secondary)]">{copy.initial}</span>
+              <span className="font-mono text-[var(--text-primary)]">{depositAmount} XTZ</span>
+            </div>
+            <div className="flex justify-between gap-4">
+              <span className="text-[var(--text-secondary)]">{copy.threshold}</span>
+              <span className="text-[var(--text-primary)]">300 days</span>
+            </div>
+            <div className="flex justify-between gap-4">
+              <span className="text-[var(--text-secondary)]">{copy.warning}</span>
+              <span className="text-[var(--warning)]">Day 293</span>
+            </div>
+            <div className="flex justify-between gap-4">
+              <span className="text-[var(--text-secondary)]">{copy.execute}</span>
+              <span className="text-[var(--danger)]">Day 300</span>
+            </div>
+            <div className="flex justify-between gap-4">
+              <span className="text-[var(--text-secondary)]">{copy.network}</span>
+              <span className="font-mono text-[var(--blue-soft)]">Etherlink Shadownet</span>
             </div>
           </div>
-        ))}
-      </div>
-
-      <div className="mb-5 space-y-2 rounded-xl border border-white/10 bg-black/40 p-4">
-        <div className="flex justify-between text-xs">
-          <span className="text-gray-400">Initial balance</span>
-          <span className="font-bold text-white">{depositAmount} XTZ</span>
-        </div>
-        <div className="flex justify-between text-xs">
-          <span className="text-gray-400">Inactivity threshold</span>
-          <span className="font-bold text-white">300 days</span>
-        </div>
-        <div className="flex justify-between text-xs">
-          <span className="text-gray-400">Warning at</span>
-          <span className="font-bold text-yellow-400">Day 293</span>
-        </div>
-        <div className="flex justify-between text-xs">
-          <span className="text-gray-400">Auto-execute at</span>
-          <span className="font-bold text-red-400">Day 300</span>
-        </div>
-        <div className="flex justify-between text-xs">
-          <span className="text-gray-400">Network</span>
-          <span className="font-bold text-cyan-400">Etherlink Shadownet</span>
         </div>
       </div>
 
-      <div className="flex gap-3">
-        <button
-          onClick={onEdit}
-          disabled={isLoading}
-          className="flex-1 rounded-xl border border-white/20 bg-white/10 py-3 text-sm font-medium transition-all hover:bg-white/15"
-        >
-          ← Edit Plan
+      <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+        <button onClick={onEdit} disabled={isLoading} className="btn-secondary flex-1 px-5 py-4 text-sm">
+          {copy.edit}
         </button>
         <button
           onClick={onConfirm}
           disabled={isLoading || !isValid}
-          className="flex-[2] rounded-xl bg-amber-500 py-3 text-sm font-bold text-black transition-all hover:bg-amber-400 disabled:cursor-not-allowed disabled:opacity-50"
+          className="btn-gold flex-[1.4] px-5 py-4 text-sm disabled:cursor-not-allowed disabled:opacity-50"
         >
           {isLoading ? (
             <span className="flex items-center justify-center gap-2">
-              <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/40 border-t-white" />
-              Anchoring on Etherlink...
+              <span className="h-4 w-4 animate-spin rounded-full border-2 border-black/35 border-t-black" />
+              {copy.anchoring}
             </span>
           ) : (
-            "🔑 Anchor on Etherlink"
+            copy.anchor
           )}
         </button>
       </div>
