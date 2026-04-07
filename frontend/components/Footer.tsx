@@ -12,7 +12,9 @@ export default function Footer({
 }) {
   const copy = {
     en: {
-      built: "Built by Gizdusum for Tezos EVM AI Hackathon 2026",
+      builtPrefix: "Built by ",
+      builtName: "Gizdusum",
+      builtSuffix: " for Tezos EVM AI Hackathon 2026",
       contract: "Contract ↗",
       faucet: "Get Faucet XTZ ↗",
       github: "GitHub ↗",
@@ -20,7 +22,9 @@ export default function Footer({
       powered: "Secured by Etherlink",
     },
     tr: {
-      built: "Gizdusum tarafından Tezos EVM AI Hackathon 2026 için geliştirildi",
+      builtPrefix: "",
+      builtName: "Gizdusum",
+      builtSuffix: " tarafından Tezos EVM AI Hackathon 2026 için geliştirildi",
       contract: "Kontrat ↗",
       faucet: "Faucet XTZ Al ↗",
       github: "GitHub ↗",
@@ -40,7 +44,18 @@ export default function Footer({
             height={40}
             className="h-8 w-auto rounded-xl object-cover object-center"
           />
-          <span>{copy.built}</span>
+          <span>
+            {copy.builtPrefix}
+            <a
+              href="https://x.com/gizdusumandnode"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[var(--text-secondary)] transition-colors hover:text-[var(--text-primary)]"
+            >
+              {copy.builtName}
+            </a>
+            {copy.builtSuffix}
+          </span>
         </div>
 
         <div className="flex flex-wrap items-center justify-center gap-4">
