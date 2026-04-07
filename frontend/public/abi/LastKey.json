@@ -1,877 +1,823 @@
 [
   {
+    "type": "constructor",
+    "stateMutability": "undefined",
+    "payable": false,
     "inputs": [
       {
-        "internalType": "address",
-        "name": "_agent",
-        "type": "address"
+        "type": "address",
+        "name": "_agent"
       }
-    ],
-    "stateMutability": "nonpayable",
-    "type": "constructor"
+    ]
   },
   {
+    "type": "event",
     "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "owner",
-        "type": "address"
-      },
-      {
-        "indexed": true,
-        "internalType": "uint8",
-        "name": "activityKind",
-        "type": "uint8"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "observedTimestamp",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "timestamp",
-        "type": "uint256"
-      }
-    ],
     "name": "ActivityAutoReset",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
     "inputs": [
       {
-        "indexed": true,
-        "internalType": "address",
+        "type": "address",
         "name": "owner",
-        "type": "address"
+        "indexed": true
       },
       {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "timestamp",
-        "type": "uint256"
-      }
-    ],
-    "name": "ActivityPinged",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "oldAgent",
-        "type": "address"
-      },
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "newAgent",
-        "type": "address"
-      }
-    ],
-    "name": "AgentUpdated",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "owner",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "amount",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "totalBalance",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "timestamp",
-        "type": "uint256"
-      }
-    ],
-    "name": "FundsDeposited",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "owner",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "totalAmount",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "timestamp",
-        "type": "uint256"
-      }
-    ],
-    "name": "InheritanceExecuted",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "owner",
-        "type": "address"
-      },
-      {
-        "indexed": true,
-        "internalType": "uint8",
+        "type": "uint8",
         "name": "activityKind",
-        "type": "uint8"
+        "indexed": true
       },
       {
-        "indexed": false,
-        "internalType": "uint256",
+        "type": "uint256",
         "name": "observedTimestamp",
-        "type": "uint256"
+        "indexed": false
       },
       {
-        "indexed": false,
-        "internalType": "bool",
-        "name": "qualifiedReset",
-        "type": "bool"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "recordedAt",
-        "type": "uint256"
+        "type": "uint256",
+        "name": "timestamp",
+        "indexed": false
       }
-    ],
+    ]
+  },
+  {
+    "type": "event",
+    "anonymous": false,
+    "name": "ActivityPinged",
+    "inputs": [
+      {
+        "type": "address",
+        "name": "owner",
+        "indexed": true
+      },
+      {
+        "type": "uint256",
+        "name": "timestamp",
+        "indexed": false
+      }
+    ]
+  },
+  {
+    "type": "event",
+    "anonymous": false,
+    "name": "AgentUpdated",
+    "inputs": [
+      {
+        "type": "address",
+        "name": "oldAgent",
+        "indexed": true
+      },
+      {
+        "type": "address",
+        "name": "newAgent",
+        "indexed": true
+      }
+    ]
+  },
+  {
+    "type": "event",
+    "anonymous": false,
+    "name": "FundsDeposited",
+    "inputs": [
+      {
+        "type": "address",
+        "name": "owner",
+        "indexed": true
+      },
+      {
+        "type": "uint256",
+        "name": "amount",
+        "indexed": false
+      },
+      {
+        "type": "uint256",
+        "name": "totalBalance",
+        "indexed": false
+      },
+      {
+        "type": "uint256",
+        "name": "timestamp",
+        "indexed": false
+      }
+    ]
+  },
+  {
+    "type": "event",
+    "anonymous": false,
+    "name": "InheritanceExecuted",
+    "inputs": [
+      {
+        "type": "address",
+        "name": "owner",
+        "indexed": true
+      },
+      {
+        "type": "uint256",
+        "name": "totalAmount",
+        "indexed": false
+      },
+      {
+        "type": "uint256",
+        "name": "timestamp",
+        "indexed": false
+      }
+    ]
+  },
+  {
+    "type": "event",
+    "anonymous": false,
     "name": "OnchainActivityDetected",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
     "inputs": [
       {
-        "indexed": true,
-        "internalType": "address",
+        "type": "address",
         "name": "owner",
-        "type": "address"
+        "indexed": true
       },
       {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "thresholdDays",
-        "type": "uint256"
+        "type": "uint8",
+        "name": "activityKind",
+        "indexed": true
       },
       {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "beneficiaryCount",
-        "type": "uint256"
+        "type": "uint256",
+        "name": "observedTimestamp",
+        "indexed": false
       },
       {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "version",
-        "type": "uint256"
+        "type": "bool",
+        "name": "qualifiedReset",
+        "indexed": false
       },
       {
-        "indexed": false,
-        "internalType": "bool",
-        "name": "isUpdate",
-        "type": "bool"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "timestamp",
-        "type": "uint256"
+        "type": "uint256",
+        "name": "recordedAt",
+        "indexed": false
       }
-    ],
+    ]
+  },
+  {
+    "type": "event",
+    "anonymous": false,
     "name": "VaultConfigured",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
     "inputs": [
       {
-        "indexed": true,
-        "internalType": "address",
+        "type": "address",
         "name": "owner",
-        "type": "address"
+        "indexed": true
       },
       {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "daysInactive",
-        "type": "uint256"
+        "type": "uint256",
+        "name": "thresholdDays",
+        "indexed": false
       },
       {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "timestamp",
-        "type": "uint256"
-      }
-    ],
-    "name": "WarningSent",
-    "type": "event"
-  },
-  {
-    "inputs": [],
-    "name": "ACTIVITY_KIND_NONE",
-    "outputs": [
-      {
-        "internalType": "uint8",
-        "name": "",
-        "type": "uint8"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "ACTIVITY_KIND_SIGNED_TRANSACTION",
-    "outputs": [
-      {
-        "internalType": "uint8",
-        "name": "",
-        "type": "uint8"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "DEFAULT_INACTIVITY_DAYS",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "RESET_METHOD_AGENT",
-    "outputs": [
-      {
-        "internalType": "uint8",
-        "name": "",
-        "type": "uint8"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "RESET_METHOD_CONFIGURED",
-    "outputs": [
-      {
-        "internalType": "uint8",
-        "name": "",
-        "type": "uint8"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "RESET_METHOD_MANUAL",
-    "outputs": [
-      {
-        "internalType": "uint8",
-        "name": "",
-        "type": "uint8"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "RESET_METHOD_NONE",
-    "outputs": [
-      {
-        "internalType": "uint8",
-        "name": "",
-        "type": "uint8"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "WARNING_DAYS_BEFORE",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "authorizedAgent",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "string",
-        "name": "_email",
-        "type": "string"
-      },
-      {
-        "internalType": "address payable[]",
-        "name": "_beneficiaryAddresses",
-        "type": "address[]"
-      },
-      {
-        "internalType": "uint256[]",
-        "name": "_percentages",
-        "type": "uint256[]"
-      },
-      {
-        "internalType": "string[]",
-        "name": "_labels",
-        "type": "string[]"
-      },
-      {
-        "internalType": "string",
-        "name": "_inheritancePlanRaw",
-        "type": "string"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_customThresholdDays",
-        "type": "uint256"
-      }
-    ],
-    "name": "createVault",
-    "outputs": [],
-    "stateMutability": "payable",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "depositToVault",
-    "outputs": [],
-    "stateMutability": "payable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_owner",
-        "type": "address"
-      }
-    ],
-    "name": "executeInheritance",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_owner",
-        "type": "address"
-      }
-    ],
-    "name": "getActivityStatus",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "lastManualCheckInTimestamp",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "lastDetectedActivityTimestamp",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "lastQualifiedActivityTimestamp",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint8",
-        "name": "lastDetectedActivityKind",
-        "type": "uint8"
-      },
-      {
-        "internalType": "uint8",
-        "name": "lastResetMethod",
-        "type": "uint8"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "getAllOwners",
-    "outputs": [
-      {
-        "internalType": "address[]",
-        "name": "",
-        "type": "address[]"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_owner",
-        "type": "address"
-      }
-    ],
-    "name": "getBeneficiaries",
-    "outputs": [
-      {
-        "internalType": "address[]",
-        "name": "wallets",
-        "type": "address[]"
-      },
-      {
-        "internalType": "uint256[]",
-        "name": "percentages",
-        "type": "uint256[]"
-      },
-      {
-        "internalType": "string[]",
-        "name": "labels",
-        "type": "string[]"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_owner",
-        "type": "address"
-      }
-    ],
-    "name": "getInheritancePlan",
-    "outputs": [
-      {
-        "internalType": "string",
-        "name": "",
-        "type": "string"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "getTotalVaultCount",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_owner",
-        "type": "address"
-      }
-    ],
-    "name": "getVaultEmail",
-    "outputs": [
-      {
-        "internalType": "string",
-        "name": "",
-        "type": "string"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_owner",
-        "type": "address"
-      }
-    ],
-    "name": "getVaultStatus",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "active",
-        "type": "bool"
-      },
-      {
-        "internalType": "bool",
-        "name": "executed",
-        "type": "bool"
-      },
-      {
-        "internalType": "bool",
-        "name": "warningIssued",
-        "type": "bool"
-      },
-      {
-        "internalType": "uint256",
-        "name": "lastActivityTimestamp",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "daysInactive",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "daysUntilExecution",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "vaultBalance",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
+        "type": "uint256",
         "name": "beneficiaryCount",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_owner",
-        "type": "address"
-      }
-    ],
-    "name": "isInactivityThresholdReached",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_owner",
-        "type": "address"
-      }
-    ],
-    "name": "isWarningThresholdReached",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_owner",
-        "type": "address"
-      }
-    ],
-    "name": "markWarningIssued",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "pingActivity",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_owner",
-        "type": "address"
+        "indexed": false
       },
       {
-        "internalType": "uint8",
-        "name": "_activityKind",
-        "type": "uint8"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_observedTimestamp",
-        "type": "uint256"
-      },
-      {
-        "internalType": "bool",
-        "name": "_qualifiedReset",
-        "type": "bool"
-      }
-    ],
-    "name": "recordDetectedActivity",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "name": "registeredOwners",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_newAgent",
-        "type": "address"
-      }
-    ],
-    "name": "updateAgent",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "string",
-        "name": "_email",
-        "type": "string"
-      },
-      {
-        "internalType": "address payable[]",
-        "name": "_beneficiaryAddresses",
-        "type": "address[]"
-      },
-      {
-        "internalType": "uint256[]",
-        "name": "_percentages",
-        "type": "uint256[]"
-      },
-      {
-        "internalType": "string[]",
-        "name": "_labels",
-        "type": "string[]"
-      },
-      {
-        "internalType": "string",
-        "name": "_inheritancePlanRaw",
-        "type": "string"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_customThresholdDays",
-        "type": "uint256"
-      }
-    ],
-    "name": "updateVault",
-    "outputs": [],
-    "stateMutability": "payable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "name": "vaultBalances",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "name": "vaults",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "owner",
-        "type": "address"
-      },
-      {
-        "internalType": "string",
-        "name": "email",
-        "type": "string"
-      },
-      {
-        "internalType": "uint256",
-        "name": "lastActivityTimestamp",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "lastManualCheckInTimestamp",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "lastDetectedActivityTimestamp",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "lastQualifiedActivityTimestamp",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "inactivityThreshold",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "warningThreshold",
-        "type": "uint256"
-      },
-      {
-        "internalType": "bool",
-        "name": "warningIssued",
-        "type": "bool"
-      },
-      {
-        "internalType": "bool",
-        "name": "executed",
-        "type": "bool"
-      },
-      {
-        "internalType": "bool",
-        "name": "active",
-        "type": "bool"
-      },
-      {
-        "internalType": "string",
-        "name": "inheritancePlanRaw",
-        "type": "string"
-      },
-      {
-        "internalType": "uint256",
-        "name": "depositedAmount",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
+        "type": "uint256",
         "name": "version",
-        "type": "uint256"
+        "indexed": false
       },
       {
-        "internalType": "uint8",
-        "name": "lastDetectedActivityKind",
-        "type": "uint8"
+        "type": "bool",
+        "name": "isUpdate",
+        "indexed": false
       },
       {
-        "internalType": "uint8",
-        "name": "lastResetMethod",
-        "type": "uint8"
+        "type": "uint256",
+        "name": "timestamp",
+        "indexed": false
       }
-    ],
-    "stateMutability": "view",
-    "type": "function"
+    ]
   },
   {
+    "type": "event",
+    "anonymous": false,
+    "name": "WarningSent",
+    "inputs": [
+      {
+        "type": "address",
+        "name": "owner",
+        "indexed": true
+      },
+      {
+        "type": "uint256",
+        "name": "daysInactive",
+        "indexed": false
+      },
+      {
+        "type": "uint256",
+        "name": "timestamp",
+        "indexed": false
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "name": "ACTIVITY_KIND_NONE",
+    "constant": true,
+    "stateMutability": "view",
+    "payable": false,
+    "inputs": [],
+    "outputs": [
+      {
+        "type": "uint8",
+        "name": ""
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "name": "ACTIVITY_KIND_SIGNED_TRANSACTION",
+    "constant": true,
+    "stateMutability": "view",
+    "payable": false,
+    "inputs": [],
+    "outputs": [
+      {
+        "type": "uint8",
+        "name": ""
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "name": "DEFAULT_INACTIVITY_DAYS",
+    "constant": true,
+    "stateMutability": "view",
+    "payable": false,
+    "inputs": [],
+    "outputs": [
+      {
+        "type": "uint256",
+        "name": ""
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "name": "RESET_METHOD_AGENT",
+    "constant": true,
+    "stateMutability": "view",
+    "payable": false,
+    "inputs": [],
+    "outputs": [
+      {
+        "type": "uint8",
+        "name": ""
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "name": "RESET_METHOD_CONFIGURED",
+    "constant": true,
+    "stateMutability": "view",
+    "payable": false,
+    "inputs": [],
+    "outputs": [
+      {
+        "type": "uint8",
+        "name": ""
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "name": "RESET_METHOD_MANUAL",
+    "constant": true,
+    "stateMutability": "view",
+    "payable": false,
+    "inputs": [],
+    "outputs": [
+      {
+        "type": "uint8",
+        "name": ""
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "name": "RESET_METHOD_NONE",
+    "constant": true,
+    "stateMutability": "view",
+    "payable": false,
+    "inputs": [],
+    "outputs": [
+      {
+        "type": "uint8",
+        "name": ""
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "name": "WARNING_DAYS_BEFORE",
+    "constant": true,
+    "stateMutability": "view",
+    "payable": false,
+    "inputs": [],
+    "outputs": [
+      {
+        "type": "uint256",
+        "name": ""
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "name": "authorizedAgent",
+    "constant": true,
+    "stateMutability": "view",
+    "payable": false,
+    "inputs": [],
+    "outputs": [
+      {
+        "type": "address",
+        "name": ""
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "name": "createVault",
+    "constant": false,
     "stateMutability": "payable",
-    "type": "receive"
+    "payable": true,
+    "inputs": [
+      {
+        "type": "string",
+        "name": "_email"
+      },
+      {
+        "type": "address[]",
+        "name": "_beneficiaryAddresses"
+      },
+      {
+        "type": "uint256[]",
+        "name": "_percentages"
+      },
+      {
+        "type": "string[]",
+        "name": "_labels"
+      },
+      {
+        "type": "string",
+        "name": "_inheritancePlanRaw"
+      },
+      {
+        "type": "uint256",
+        "name": "_customThresholdDays"
+      }
+    ],
+    "outputs": []
+  },
+  {
+    "type": "function",
+    "name": "depositToVault",
+    "constant": false,
+    "stateMutability": "payable",
+    "payable": true,
+    "inputs": [],
+    "outputs": []
+  },
+  {
+    "type": "function",
+    "name": "executeInheritance",
+    "constant": false,
+    "payable": false,
+    "inputs": [
+      {
+        "type": "address",
+        "name": "_owner"
+      }
+    ],
+    "outputs": []
+  },
+  {
+    "type": "function",
+    "name": "getActivityStatus",
+    "constant": true,
+    "stateMutability": "view",
+    "payable": false,
+    "inputs": [
+      {
+        "type": "address",
+        "name": "_owner"
+      }
+    ],
+    "outputs": [
+      {
+        "type": "uint256",
+        "name": "lastManualCheckInTimestamp"
+      },
+      {
+        "type": "uint256",
+        "name": "lastDetectedActivityTimestamp"
+      },
+      {
+        "type": "uint256",
+        "name": "lastQualifiedActivityTimestamp"
+      },
+      {
+        "type": "uint8",
+        "name": "lastDetectedActivityKind"
+      },
+      {
+        "type": "uint8",
+        "name": "lastResetMethod"
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "name": "getAllOwners",
+    "constant": true,
+    "stateMutability": "view",
+    "payable": false,
+    "inputs": [],
+    "outputs": [
+      {
+        "type": "address[]",
+        "name": ""
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "name": "getBeneficiaries",
+    "constant": true,
+    "stateMutability": "view",
+    "payable": false,
+    "inputs": [
+      {
+        "type": "address",
+        "name": "_owner"
+      }
+    ],
+    "outputs": [
+      {
+        "type": "address[]",
+        "name": "wallets"
+      },
+      {
+        "type": "uint256[]",
+        "name": "percentages"
+      },
+      {
+        "type": "string[]",
+        "name": "labels"
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "name": "getInheritancePlan",
+    "constant": true,
+    "stateMutability": "view",
+    "payable": false,
+    "inputs": [
+      {
+        "type": "address",
+        "name": "_owner"
+      }
+    ],
+    "outputs": [
+      {
+        "type": "string",
+        "name": ""
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "name": "getTotalVaultCount",
+    "constant": true,
+    "stateMutability": "view",
+    "payable": false,
+    "inputs": [],
+    "outputs": [
+      {
+        "type": "uint256",
+        "name": ""
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "name": "getVaultEmail",
+    "constant": true,
+    "stateMutability": "view",
+    "payable": false,
+    "inputs": [
+      {
+        "type": "address",
+        "name": "_owner"
+      }
+    ],
+    "outputs": [
+      {
+        "type": "string",
+        "name": ""
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "name": "getVaultStatus",
+    "constant": true,
+    "stateMutability": "view",
+    "payable": false,
+    "inputs": [
+      {
+        "type": "address",
+        "name": "_owner"
+      }
+    ],
+    "outputs": [
+      {
+        "type": "bool",
+        "name": "active"
+      },
+      {
+        "type": "bool",
+        "name": "executed"
+      },
+      {
+        "type": "bool",
+        "name": "warningIssued"
+      },
+      {
+        "type": "uint256",
+        "name": "lastActivityTimestamp"
+      },
+      {
+        "type": "uint256",
+        "name": "daysInactive"
+      },
+      {
+        "type": "uint256",
+        "name": "daysUntilExecution"
+      },
+      {
+        "type": "uint256",
+        "name": "vaultBalance"
+      },
+      {
+        "type": "uint256",
+        "name": "beneficiaryCount"
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "name": "isInactivityThresholdReached",
+    "constant": true,
+    "stateMutability": "view",
+    "payable": false,
+    "inputs": [
+      {
+        "type": "address",
+        "name": "_owner"
+      }
+    ],
+    "outputs": [
+      {
+        "type": "bool",
+        "name": ""
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "name": "isWarningThresholdReached",
+    "constant": true,
+    "stateMutability": "view",
+    "payable": false,
+    "inputs": [
+      {
+        "type": "address",
+        "name": "_owner"
+      }
+    ],
+    "outputs": [
+      {
+        "type": "bool",
+        "name": ""
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "name": "markWarningIssued",
+    "constant": false,
+    "payable": false,
+    "inputs": [
+      {
+        "type": "address",
+        "name": "_owner"
+      }
+    ],
+    "outputs": []
+  },
+  {
+    "type": "function",
+    "name": "pingActivity",
+    "constant": false,
+    "payable": false,
+    "inputs": [],
+    "outputs": []
+  },
+  {
+    "type": "function",
+    "name": "recordDetectedActivity",
+    "constant": false,
+    "payable": false,
+    "inputs": [
+      {
+        "type": "address",
+        "name": "_owner"
+      },
+      {
+        "type": "uint8",
+        "name": "_activityKind"
+      },
+      {
+        "type": "uint256",
+        "name": "_observedTimestamp"
+      },
+      {
+        "type": "bool",
+        "name": "_qualifiedReset"
+      }
+    ],
+    "outputs": []
+  },
+  {
+    "type": "function",
+    "name": "registeredOwners",
+    "constant": true,
+    "stateMutability": "view",
+    "payable": false,
+    "inputs": [
+      {
+        "type": "uint256",
+        "name": ""
+      }
+    ],
+    "outputs": [
+      {
+        "type": "address",
+        "name": ""
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "name": "updateAgent",
+    "constant": false,
+    "payable": false,
+    "inputs": [
+      {
+        "type": "address",
+        "name": "_newAgent"
+      }
+    ],
+    "outputs": []
+  },
+  {
+    "type": "function",
+    "name": "updateVault",
+    "constant": false,
+    "stateMutability": "payable",
+    "payable": true,
+    "inputs": [
+      {
+        "type": "string",
+        "name": "_email"
+      },
+      {
+        "type": "address[]",
+        "name": "_beneficiaryAddresses"
+      },
+      {
+        "type": "uint256[]",
+        "name": "_percentages"
+      },
+      {
+        "type": "string[]",
+        "name": "_labels"
+      },
+      {
+        "type": "string",
+        "name": "_inheritancePlanRaw"
+      },
+      {
+        "type": "uint256",
+        "name": "_customThresholdDays"
+      }
+    ],
+    "outputs": []
+  },
+  {
+    "type": "function",
+    "name": "vaultBalances",
+    "constant": true,
+    "stateMutability": "view",
+    "payable": false,
+    "inputs": [
+      {
+        "type": "address",
+        "name": ""
+      }
+    ],
+    "outputs": [
+      {
+        "type": "uint256",
+        "name": ""
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "name": "vaults",
+    "constant": true,
+    "stateMutability": "view",
+    "payable": false,
+    "inputs": [
+      {
+        "type": "address",
+        "name": ""
+      }
+    ],
+    "outputs": [
+      {
+        "type": "address",
+        "name": "owner"
+      },
+      {
+        "type": "string",
+        "name": "email"
+      },
+      {
+        "type": "uint256",
+        "name": "lastActivityTimestamp"
+      },
+      {
+        "type": "uint256",
+        "name": "lastManualCheckInTimestamp"
+      },
+      {
+        "type": "uint256",
+        "name": "lastDetectedActivityTimestamp"
+      },
+      {
+        "type": "uint256",
+        "name": "lastQualifiedActivityTimestamp"
+      },
+      {
+        "type": "uint256",
+        "name": "inactivityThreshold"
+      },
+      {
+        "type": "uint256",
+        "name": "warningThreshold"
+      },
+      {
+        "type": "bool",
+        "name": "warningIssued"
+      },
+      {
+        "type": "bool",
+        "name": "executed"
+      },
+      {
+        "type": "bool",
+        "name": "active"
+      },
+      {
+        "type": "string",
+        "name": "inheritancePlanRaw"
+      },
+      {
+        "type": "uint256",
+        "name": "depositedAmount"
+      },
+      {
+        "type": "uint256",
+        "name": "version"
+      },
+      {
+        "type": "uint8",
+        "name": "lastDetectedActivityKind"
+      },
+      {
+        "type": "uint8",
+        "name": "lastResetMethod"
+      }
+    ]
+  },
+  {
+    "type": "receive",
+    "stateMutability": "payable"
   }
 ]

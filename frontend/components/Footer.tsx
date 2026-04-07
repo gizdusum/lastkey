@@ -45,7 +45,7 @@ export default function Footer({
 
         <div className="flex flex-wrap items-center justify-center gap-4">
           <a
-            href="https://shadownet.explorer.etherlink.com/address/0x29C3B37CD735104812a8A72B9b6FeA9578e044a5"
+            href="https://shadownet.explorer.etherlink.com/address/0x6DF4368aAd2B3829Fe08A0763F502CB91A9B361b"
             target="_blank"
             rel="noopener noreferrer"
             className="footer-link"

@@ -11,3 +11,4 @@ coverage/
 *.tsbuildinfo
 artifacts/
 cache/
+agent/data/

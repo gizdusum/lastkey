@@ -1,8 +1,8 @@
 {
-  "contractAddress": "0x29C3B37CD735104812a8A72B9b6FeA9578e044a5",
+  "contractAddress": "0x6DF4368aAd2B3829Fe08A0763F502CB91A9B361b",
   "agentAddress": "0xb61C1007506d31620895dfd118fa2b12CF3A2484",
   "deployer": "0xb61C1007506d31620895dfd118fa2b12CF3A2484",
   "network": "Etherlink Shadownet Testnet",
   "chainId": 127823,
-  "deployedAt": "2026-04-06T19:59:56.037Z"
+  "deployedAt": "2026-04-07T17:37:27.245Z"
 }
