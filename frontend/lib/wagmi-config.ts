@@ -36,9 +36,7 @@ export const etherlinkTestnet = defineChain({
 export const wagmiConfig = createConfig({
   chains: [etherlinkTestnet],
   connectors: [
-    injected({
-      shimDisconnect: true,
-    }),
+    injected(),
   ],
   transports: {
     [etherlinkTestnet.id]: http(

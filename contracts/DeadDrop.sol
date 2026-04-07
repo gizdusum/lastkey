@@ -19,6 +19,7 @@ contract DeadDrop {
         bool active;
         string inheritancePlanRaw;
         uint256 depositedAmount;
+        uint256 version;
     }
 
     mapping(address => Vault) public vaults;
@@ -26,16 +27,24 @@ contract DeadDrop {
     mapping(address => uint256) public vaultBalances;
 
     address[] public registeredOwners;
+    mapping(address => bool) private registered;
     address public authorizedAgent;
 
     uint256 public constant DEFAULT_INACTIVITY_DAYS = 300;
     uint256 public constant WARNING_DAYS_BEFORE = 7;
 
-    event VaultCreated(address indexed owner, uint256 threshold, uint256 beneficiaryCount, uint256 timestamp);
+    event VaultConfigured(
+        address indexed owner,
+        uint256 thresholdDays,
+        uint256 beneficiaryCount,
+        uint256 version,
+        bool isUpdate,
+        uint256 timestamp
+    );
     event ActivityPinged(address indexed owner, uint256 timestamp);
     event WarningSent(address indexed owner, uint256 daysInactive, uint256 timestamp);
     event InheritanceExecuted(address indexed owner, uint256 totalAmount, uint256 timestamp);
-    event FundsDeposited(address indexed owner, uint256 amount, uint256 timestamp);
+    event FundsDeposited(address indexed owner, uint256 amount, uint256 totalBalance, uint256 timestamp);
     event AgentUpdated(address indexed oldAgent, address indexed newAgent);
 
     modifier onlyAgent() {
@@ -66,58 +75,36 @@ contract DeadDrop {
         string memory _inheritancePlanRaw,
         uint256 _customThresholdDays
     ) external payable {
-        require(!vaults[msg.sender].active, "DeadDrop: Vault already exists");
-        require(_beneficiaryAddresses.length > 0, "DeadDrop: Need at least one beneficiary");
-        require(_beneficiaryAddresses.length <= 10, "DeadDrop: Max 10 beneficiaries");
-        require(
-            _beneficiaryAddresses.length == _percentages.length &&
-                _percentages.length == _labels.length,
-            "DeadDrop: Array length mismatch"
+        _configureVault(
+            msg.sender,
+            _email,
+            _beneficiaryAddresses,
+            _percentages,
+            _labels,
+            _inheritancePlanRaw,
+            _customThresholdDays,
+            msg.value
         );
-        require(bytes(_email).length > 0, "DeadDrop: Email required");
+    }
 
-        uint256 totalPercentage = 0;
-        for (uint256 i = 0; i < _percentages.length; i++) {
-            require(_beneficiaryAddresses[i] != address(0), "DeadDrop: Invalid beneficiary address");
-            require(_percentages[i] > 0, "DeadDrop: Percentage must be > 0");
-            totalPercentage += _percentages[i];
-        }
-        require(totalPercentage == 10000, "DeadDrop: Percentages must sum to 100%");
-
-        uint256 thresholdDays = _customThresholdDays > 0 ? _customThresholdDays : DEFAULT_INACTIVITY_DAYS;
-        require(thresholdDays > WARNING_DAYS_BEFORE, "DeadDrop: Threshold too short");
-
-        vaults[msg.sender] = Vault({
-            owner: msg.sender,
-            email: _email,
-            lastActivityTimestamp: block.timestamp,
-            inactivityThreshold: thresholdDays * 1 days,
-            warningThreshold: (thresholdDays - WARNING_DAYS_BEFORE) * 1 days,
-            warningIssued: false,
-            executed: false,
-            active: true,
-            inheritancePlanRaw: _inheritancePlanRaw,
-            depositedAmount: msg.value
-        });
-
-        for (uint256 i = 0; i < _beneficiaryAddresses.length; i++) {
-            beneficiaries[msg.sender].push(
-                Beneficiary({
-                    wallet: _beneficiaryAddresses[i],
-                    percentage: _percentages[i],
-                    label: _labels[i]
-                })
-            );
-        }
-
-        vaultBalances[msg.sender] = msg.value;
-        registeredOwners.push(msg.sender);
-
-        emit VaultCreated(msg.sender, thresholdDays, _beneficiaryAddresses.length, block.timestamp);
-
-        if (msg.value > 0) {
-            emit FundsDeposited(msg.sender, msg.value, block.timestamp);
-        }
+    function updateVault(
+        string memory _email,
+        address payable[] memory _beneficiaryAddresses,
+        uint256[] memory _percentages,
+        string[] memory _labels,
+        string memory _inheritancePlanRaw,
+        uint256 _customThresholdDays
+    ) external payable {
+        _configureVault(
+            msg.sender,
+            _email,
+            _beneficiaryAddresses,
+            _percentages,
+            _labels,
+            _inheritancePlanRaw,
+            _customThresholdDays,
+            msg.value
+        );
     }
 
     function pingActivity() external vaultExists(msg.sender) notExecuted(msg.sender) {
@@ -175,7 +162,7 @@ contract DeadDrop {
         require(msg.value > 0, "DeadDrop: Must send XTZ");
         vaultBalances[msg.sender] += msg.value;
         vaults[msg.sender].depositedAmount += msg.value;
-        emit FundsDeposited(msg.sender, msg.value, block.timestamp);
+        emit FundsDeposited(msg.sender, msg.value, vaultBalances[msg.sender], block.timestamp);
     }
 
     function updateAgent(address _newAgent) external {
@@ -260,6 +247,86 @@ contract DeadDrop {
     function isWarningThresholdReached(address _owner) external view returns (bool) {
         if (!vaults[_owner].active || vaults[_owner].executed) return false;
         return block.timestamp >= vaults[_owner].lastActivityTimestamp + vaults[_owner].warningThreshold;
+    }
+
+    function _configureVault(
+        address _owner,
+        string memory _email,
+        address payable[] memory _beneficiaryAddresses,
+        uint256[] memory _percentages,
+        string[] memory _labels,
+        string memory _inheritancePlanRaw,
+        uint256 _customThresholdDays,
+        uint256 _incomingValue
+    ) internal {
+        require(_beneficiaryAddresses.length > 0, "DeadDrop: Need at least one beneficiary");
+        require(_beneficiaryAddresses.length <= 10, "DeadDrop: Max 10 beneficiaries");
+        require(
+            _beneficiaryAddresses.length == _percentages.length &&
+                _percentages.length == _labels.length,
+            "DeadDrop: Array length mismatch"
+        );
+        require(bytes(_email).length > 0, "DeadDrop: Email required");
+
+        uint256 totalPercentage = 0;
+        for (uint256 i = 0; i < _percentages.length; i++) {
+            require(_beneficiaryAddresses[i] != address(0), "DeadDrop: Invalid beneficiary address");
+            require(_percentages[i] > 0, "DeadDrop: Percentage must be > 0");
+            totalPercentage += _percentages[i];
+        }
+        require(totalPercentage == 10000, "DeadDrop: Percentages must sum to 100%");
+
+        uint256 thresholdDays = _customThresholdDays > 0 ? _customThresholdDays : DEFAULT_INACTIVITY_DAYS;
+        require(thresholdDays > WARNING_DAYS_BEFORE, "DeadDrop: Threshold too short");
+
+        bool isUpdate = vaults[_owner].active && !vaults[_owner].executed;
+        uint256 previousVersion = vaults[_owner].version;
+
+        delete beneficiaries[_owner];
+        for (uint256 i = 0; i < _beneficiaryAddresses.length; i++) {
+            beneficiaries[_owner].push(
+                Beneficiary({
+                    wallet: _beneficiaryAddresses[i],
+                    percentage: _percentages[i],
+                    label: _labels[i]
+                })
+            );
+        }
+
+        uint256 nextVersion = previousVersion + 1;
+        vaults[_owner] = Vault({
+            owner: _owner,
+            email: _email,
+            lastActivityTimestamp: block.timestamp,
+            inactivityThreshold: thresholdDays * 1 days,
+            warningThreshold: (thresholdDays - WARNING_DAYS_BEFORE) * 1 days,
+            warningIssued: false,
+            executed: false,
+            active: true,
+            inheritancePlanRaw: _inheritancePlanRaw,
+            depositedAmount: vaultBalances[_owner] + _incomingValue,
+            version: nextVersion
+        });
+
+        vaultBalances[_owner] += _incomingValue;
+
+        if (!registered[_owner]) {
+            registered[_owner] = true;
+            registeredOwners.push(_owner);
+        }
+
+        emit VaultConfigured(
+            _owner,
+            thresholdDays,
+            _beneficiaryAddresses.length,
+            nextVersion,
+            isUpdate,
+            block.timestamp
+        );
+
+        if (_incomingValue > 0) {
+            emit FundsDeposited(_owner, _incomingValue, vaultBalances[_owner], block.timestamp);
+        }
     }
 
     receive() external payable {}

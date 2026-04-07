@@ -1,62 +1,47 @@
 "use client";
-
 import { useAccount, useConnect, useDisconnect, useSwitchChain } from "wagmi";
-import { injected } from "wagmi/connectors";
 import { etherlinkTestnet } from "@/lib/wagmi-config";
 
-interface ConnectWalletProps {
-  large?: boolean;
-}
-
-export default function ConnectWallet({
-  large = false,
-}: ConnectWalletProps) {
+export default function ConnectWallet({ large = false }: { large?: boolean }) {
   const { address, chain, isConnected } = useAccount();
-  const { connectAsync, isPending } = useConnect();
+  const { connectAsync, connectors, isPending, error } = useConnect();
   const { disconnect } = useDisconnect();
-  const { switchChainAsync, isPending: isSwitching } = useSwitchChain();
+  const { switchChainAsync, isPending: switching } = useSwitchChain();
+  const cls = large ? "px-10 py-5 text-lg" : "px-5 py-2.5 text-sm";
 
-  const baseClass = large
-    ? "min-w-[220px] px-8 py-4 text-base sm:px-10 sm:py-5 sm:text-lg"
-    : "px-4 py-2.5 text-sm";
+  const handleConnect = async () => {
+    const c = connectors[0];
+    if (!c) { alert("MetaMask bulunamadı. Lütfen MetaMask yükleyin."); return; }
+    try { await connectAsync({ connector: c }); }
+    catch (e: unknown) { if (e instanceof Error && !e.message.includes("rejected")) console.error(e); }
+  };
 
-  if (!isConnected) {
-    return (
-      <button
-        onClick={() => connectAsync({ connector: injected() })}
-        disabled={isPending}
-        className={`inline-flex shrink-0 items-center justify-center whitespace-nowrap rounded-full bg-[var(--gold)] font-semibold text-slate-950 transition-all duration-200 hover:brightness-105 disabled:opacity-60 ${baseClass}`}
-      >
-        {isPending ? "Connecting..." : "Connect Wallet"}
+  if (!isConnected) return (
+    <div className="flex flex-col items-center gap-1">
+      <button onClick={handleConnect} disabled={isPending}
+        className={`btn-gold disabled:opacity-60 ${cls}`}>
+        {isPending ? "Bağlanıyor..." : "Connect Wallet"}
       </button>
-    );
-  }
+      {error && <p className="text-xs text-red-400">{error.message.slice(0,80)}</p>}
+    </div>
+  );
 
-  if (chain?.id !== etherlinkTestnet.id) {
-    return (
-      <button
-        onClick={() => switchChainAsync({ chainId: etherlinkTestnet.id })}
-        disabled={isSwitching}
-        className="rounded-full bg-[var(--danger)] px-5 py-2.5 text-sm font-semibold text-white hover:brightness-110 disabled:opacity-60"
-      >
-        {isSwitching ? "Switching..." : "⚠️ Switch to Etherlink"}
-      </button>
-    );
-  }
+  if (chain?.id !== etherlinkTestnet.id) return (
+    <button onClick={() => switchChainAsync({ chainId: etherlinkTestnet.id }).catch(console.error)}
+      disabled={switching}
+      className="rounded-xl border border-red-400/30 bg-red-500 px-5 py-2.5 text-sm font-bold text-white shadow-[0_4px_20px_rgba(224,85,85,0.25)] transition-all hover:-translate-y-0.5 hover:bg-red-400 disabled:opacity-60">
+      {switching ? "Değiştiriliyor..." : "⚠️ Etherlink'e Geç"}
+    </button>
+  );
 
   return (
-    <div className="flex flex-wrap items-center justify-end gap-2">
-      <div className="hidden rounded-full border border-white/10 bg-white/6 px-3 py-2 text-xs text-slate-300 lg:block">
-        {chain?.name || "Etherlink Shadownet"}
-      </div>
-      <div className="rounded-full border border-white/10 bg-white/6 px-3 py-2 text-xs font-mono text-slate-200">
-        {address ? `${address.slice(0, 6)}...${address.slice(-4)}` : "Connected"}
-      </div>
-      <button
-        onClick={() => disconnect()}
-        className="rounded-full border border-white/10 bg-white/6 px-4 py-2 text-xs font-semibold text-slate-200 transition-all hover:border-white/20 hover:bg-white/10 hover:text-white"
-      >
-        Disconnect
+    <div className="flex items-center gap-2">
+      <span className="rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-xs text-[var(--text-secondary)]">
+        {chain.name}
+      </span>
+      <button onClick={() => disconnect()}
+        className="font-mono rounded-lg border border-white/20 bg-white/10 px-4 py-2 text-sm text-[var(--text-primary)] transition-all hover:bg-white/20">
+        {address?.slice(0,6)}...{address?.slice(-4)}
       </button>
     </div>
   );

@@ -1,285 +1,124 @@
 "use client";
-
 import { useState } from "react";
-import {
-  useAccount,
-  useBalance,
-  usePublicClient,
-  useWaitForTransactionReceipt,
-  useWalletClient,
-} from "wagmi";
+import { useAccount, useSwitchChain, useWaitForTransactionReceipt, useWriteContract } from "wagmi";
 import { parseEther } from "viem";
-import { LASTKEY_ABI, LASTKEY_ADDRESS } from "@/lib/contract";
+import { DEADDROP_ABI, DEADDROP_ADDRESS } from "@/lib/contract";
+import { etherlinkTestnet } from "@/lib/wagmi-config";
 import BeneficiaryPreview from "./BeneficiaryPreview";
 import TransactionToast from "./TransactionToast";
 
-interface Beneficiary {
-  address: string;
-  percentage: number;
-  label: string;
-}
+interface Beneficiary { address: string; percentage: number; label: string; }
 
-type Step = "input" | "preview";
-
-const CREATE_VAULT_GAS_LIMIT = 500_000n;
+const EXAMPLES = [
+  "If I'm unreachable for 300 days, send 70% to my family at 0x70997970C51812dc3A010C7d01b50e0d17dc79C8 and 30% to my foundation at 0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC",
+  "If I do not check in for 300 days, send everything to my son at 0x90F79bf6EB2c4f870365E785982E1f101E93b906",
+  "Split equally between 0x15d34AAf54267DB7D7c367839AAf71A00a2C6A65 and 0x9965507D1a55bcC2695C58ba16FB37d819B0A4dc",
+];
 
 export default function InheritanceForm({ address }: { address: string }) {
-  const publicClient = usePublicClient();
-  const { data: walletClient } = useWalletClient();
-  const { chainId } = useAccount();
-  const { data: balance } = useBalance({
-    address: address as `0x${string}`,
-  });
-
-  const [step, setStep] = useState<Step>("input");
-  const [naturalLanguage, setNaturalLanguage] = useState("");
+  const [step, setStep] = useState<"input" | "preview">("input");
+  const [text, setText] = useState("");
   const [email, setEmail] = useState("");
-  const [depositAmount, setDepositAmount] = useState("0.01");
+  const [amount, setAmount] = useState("0.01");
   const [parsed, setParsed] = useState<Beneficiary[]>([]);
   const [parsing, setParsing] = useState(false);
-  const [preparing, setPreparing] = useState(false);
-  const [parseError, setParseError] = useState("");
-  const [actionError, setActionError] = useState("");
-  const [txHash, setTxHash] = useState<`0x${string}` | undefined>();
+  const [parseErr, setParseErr] = useState("");
 
-  const { isLoading: isConfirming, isSuccess } = useWaitForTransactionReceipt({
-    hash: txHash,
-  });
+  const { chain } = useAccount();
+  const { switchChainAsync } = useSwitchChain();
+  const { writeContract, data: txHash, isPending, error: txError, reset } = useWriteContract();
+  const { isLoading: confirming, isSuccess } = useWaitForTransactionReceipt({ hash: txHash });
 
   const handleParse = async () => {
-    if (!naturalLanguage.trim() || !email.trim()) return;
-    setParsing(true);
-    setParseError("");
-    setActionError("");
-
+    if (!text.trim() || !email.trim()) return;
+    setParsing(true); setParseErr("");
     try {
-      const res = await fetch("/api/parse-intent", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ input: naturalLanguage }),
-      });
-      const data = await res.json();
-
-      if (data.success && data.beneficiaries?.length > 0) {
-        setParsed(data.beneficiaries);
-        setStep("preview");
-      } else {
-        setParseError(
-          data.error || "Could not parse your plan. Please include wallet addresses (0x...)"
-        );
-      }
-    } catch {
-      setParseError("Network error. Please try again.");
-    } finally {
-      setParsing(false);
-    }
+      const r = await fetch("/api/parse-intent", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ input: text }) });
+      const d = await r.json();
+      if (d.success && d.beneficiaries?.length > 0) { setParsed(d.beneficiaries); setStep("preview"); }
+      else setParseErr(d.error || "Adres bulunamadı. Lütfen 0x... formatında adres ekleyin.");
+    } catch { setParseErr("Ağ hatası. Tekrar deneyin."); }
+    finally { setParsing(false); }
   };
 
   const handleCreateVault = async () => {
     if (parsed.length === 0) return;
-
-    setActionError("");
-    setPreparing(true);
-
-    try {
-      const depositValue = parseEther(depositAmount || "0");
-      const lowBalanceThreshold = parseEther("0.001");
-
-      if (chainId !== 127823) {
-        throw new Error("Switch your wallet to Etherlink Shadownet before anchoring.");
-      }
-
-      if (!walletClient || !publicClient) {
-        throw new Error("Your wallet client is not ready yet. Reconnect and try again.");
-      }
-
-      if (!balance || balance.value < depositValue + lowBalanceThreshold) {
-        throw new Error(
-          "Your wallet needs a little more test XTZ before this transaction can be estimated and sent."
-        );
-      }
-
-      const args = [
-        email,
-        parsed.map((b) => b.address as `0x${string}`),
-        parsed.map((b) => BigInt(b.percentage)),
-        parsed.map((b) => b.label),
-        naturalLanguage,
-        BigInt(300),
-      ] as const;
-
-      const simulation = await publicClient.simulateContract({
-        address: LASTKEY_ADDRESS,
-        abi: LASTKEY_ABI,
-        functionName: "createVault",
-        args,
-        account: walletClient.account.address,
-        value: depositValue,
-        gas: CREATE_VAULT_GAS_LIMIT,
-      });
-
-      const hash = await walletClient.writeContract({
-        ...simulation.request,
-        gas: simulation.request.gas ?? CREATE_VAULT_GAS_LIMIT,
-      });
-
-      setTxHash(hash);
-    } catch (error) {
-      const message =
-        error instanceof Error ? error.message : "The transaction could not be prepared.";
-
-      if (message.toLowerCase().includes("already exists")) {
-        setActionError(
-          "This wallet already has a continuity vault. Use the existing plan instead of creating a new one."
-        );
-      } else if (
-        message.toLowerCase().includes("insufficient") ||
-        message.toLowerCase().includes("gas")
-      ) {
-        setActionError(
-          "The wallet could not estimate or cover gas. Top up with test XTZ from the faucet and try again."
-        );
-      } else {
-        setActionError(message);
-      }
-    } finally {
-      setPreparing(false);
+    if (chain?.id !== etherlinkTestnet.id) {
+      try { await switchChainAsync({ chainId: etherlinkTestnet.id }); }
+      catch { return; }
     }
-  };
-
-  const resetFlow = () => {
-    setStep("input");
-    setParseError("");
-    setActionError("");
-    setTxHash(undefined);
+    console.log("[LastKey] createVault called", { address: DEADDROP_ADDRESS, parsed, amount });
+    writeContract({
+      address: DEADDROP_ADDRESS,
+      abi: DEADDROP_ABI,
+      functionName: "createVault",
+      chainId: etherlinkTestnet.id,
+      args: [email, parsed.map(b => b.address as `0x${string}`), parsed.map(b => BigInt(b.percentage)), parsed.map(b => b.label), text, BigInt(300)],
+      value: parseEther(amount || "0"),
+    });
   };
 
   return (
     <div className="space-y-4">
-      {isSuccess || txHash ? (
+      {(isSuccess || txHash) && (
         <TransactionToast
-          title={isSuccess ? "Plan anchored on Etherlink" : "Awaiting confirmation"}
-          message={
-            isSuccess
-              ? `Your continuity plan for ${address.slice(0, 6)}...${address.slice(-4)} is now live onchain.`
-              : "Your wallet accepted the request. Etherlink is confirming the transaction."
-          }
-          txHash={txHash}
-          tone={isSuccess ? "success" : "info"}
-        />
-      ) : null}
-
-      {!isSuccess && balance ? (
-        <div className="glass-panel rounded-[26px] px-4 py-3 text-center text-sm text-slate-300">
-          Wallet balance:
-          <span className="ml-2 font-semibold text-white">
-            {Number(balance.formatted).toFixed(4)} {balance.symbol}
-          </span>
-        </div>
-      ) : null}
+          title={isSuccess ? "Plan Etherlink'e Kaydedildi" : "Etherlink'te Onaylanıyor..."}
+          message={isSuccess ? `${address.slice(0,6)}...${address.slice(-4)} için planınız kaydedildi.` : "İşlem blok zincirine işleniyor."}
+          txHash={txHash} tone={isSuccess ? "success" : "info"} />
+      )}
 
       {step === "input" ? (
-        <div className="glass-panel animate-fade-in rounded-[34px] p-6 sm:p-8">
-          <div className="text-center">
-            <p className="text-xs font-semibold tracking-[0.28em] text-sky-200/80">
-              CONTINUITY SETUP
-            </p>
-            <h3 className="mt-4 text-3xl font-black tracking-[-0.04em] text-white">
-              Define the final outcome.
-            </h3>
-            <p className="mx-auto mt-4 max-w-2xl text-sm leading-8 text-slate-300">
-              Keep it short and explicit. LastKey will transform your sentence into a
-              beneficiary plan and an Etherlink-ready vault transaction.
-            </p>
+        <div className="animate-fade-in rounded-2xl border border-white/10 bg-white/5 p-6">
+          <h3 className="mb-1 text-lg font-black">Devam Planını Yaz</h3>
+          <p className="mb-5 text-xs text-gray-500">AI, wallet adreslerini ve yüzdeleri otomatik yapılandırır.</p>
+
+          <div className="mb-4 flex flex-wrap gap-2">
+            {EXAMPLES.map((ex, i) => (
+              <button key={i} onClick={() => setText(ex)}
+                className="max-w-[220px] truncate rounded-lg border border-white/10 bg-white/5 px-2 py-1 text-[10px] text-gray-500 hover:border-white/30">
+                Örnek {i + 1}
+              </button>
+            ))}
           </div>
 
-          <div className="mt-6 space-y-4">
-            <textarea
-              value={naturalLanguage}
-              onChange={(e) => setNaturalLanguage(e.target.value)}
-              placeholder="If I become unreachable for 300 days, send 70% to my family at 0x... and 30% to my foundation at 0x..."
-              className="soft-ring min-h-[170px] w-full resize-none rounded-[28px] border border-white/10 bg-[rgba(255,255,255,0.03)] p-5 text-sm leading-7 text-white placeholder:text-slate-500 focus:border-sky-400/50 focus:outline-none"
-            />
+          <textarea value={text} onChange={e => setText(e.target.value)} rows={4}
+            placeholder="Örn: 300 gün hareketsiz kalırsam, %70'i 0xABC... adresine ve %30'unu 0xDEF... adresine gönder"
+            className="w-full resize-none rounded-xl border border-white/20 bg-black/40 p-4 text-sm placeholder-gray-600 focus:border-amber-500/50 focus:outline-none" />
 
-            <div className="grid gap-4 md:grid-cols-[1.2fr,0.8fr]">
-              <div>
-                <label className="mb-2 block text-[11px] font-semibold tracking-[0.28em] text-slate-500">
-                  ALERT EMAIL
-                </label>
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="you@example.com"
-                  className="soft-ring w-full rounded-[20px] border border-white/10 bg-[rgba(255,255,255,0.03)] px-4 py-3 text-sm text-white placeholder:text-slate-500 focus:border-sky-400/50 focus:outline-none"
-                />
-              </div>
+          <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="uyari@email.com"
+            className="mt-3 w-full rounded-xl border border-white/20 bg-black/40 p-3 text-sm placeholder-gray-600 focus:border-amber-500/50 focus:outline-none" />
 
-              <div>
-                <label className="mb-2 block text-[11px] font-semibold tracking-[0.28em] text-slate-500">
-                  INITIAL BALANCE
-                </label>
-                <div className="flex gap-2">
-                  <input
-                    type="number"
-                    value={depositAmount}
-                    onChange={(e) => setDepositAmount(e.target.value)}
-                    step="0.01"
-                    min="0"
-                    className="soft-ring min-w-0 flex-1 rounded-[20px] border border-white/10 bg-[rgba(255,255,255,0.03)] px-4 py-3 text-sm text-white focus:border-sky-400/50 focus:outline-none"
-                  />
-                  <div className="flex gap-2">
-                    {["0.01", "0.1", "1.0"].map((value) => (
-                      <button
-                        key={value}
-                        type="button"
-                        onClick={() => setDepositAmount(value)}
-                        className={`rounded-full px-3 py-2 text-xs transition-colors ${
-                          depositAmount === value
-                            ? "bg-[var(--gold)] text-slate-950"
-                            : "border border-white/10 text-slate-300 hover:bg-white/8 hover:text-white"
-                        }`}
-                      >
-                        {value}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
+          <div className="mt-3 flex gap-2">
+            <input type="number" value={amount} onChange={e => setAmount(e.target.value)} step="0.01" min="0"
+              className="flex-1 rounded-xl border border-white/20 bg-black/40 p-3 text-sm focus:border-amber-500/50 focus:outline-none" />
+            {["0.01","0.1","1.0"].map(v => (
+              <button key={v} onClick={() => setAmount(v)}
+                className={`rounded-xl px-3 text-xs ${amount === v ? "border border-amber-500/40 bg-amber-500/20 text-amber-300" : "border border-white/10 bg-white/5 text-gray-400 hover:border-white/30"}`}>
+                {v}
+              </button>
+            ))}
           </div>
 
-          {parseError ? (
-            <div className="mt-4 rounded-[20px] border border-red-500/20 bg-red-500/10 p-4 text-sm text-red-200">
-              {parseError}
-            </div>
-          ) : null}
+          {parseErr && <div className="mt-3 rounded-xl border border-red-500/30 bg-red-900/20 p-3"><p className="text-xs text-red-400">{parseErr}</p></div>}
 
-          {actionError ? (
-            <div className="mt-4 rounded-[20px] border border-amber-500/20 bg-amber-500/10 p-4 text-sm text-amber-100">
-              {actionError}
-            </div>
-          ) : null}
-
-          <div className="mt-6 flex justify-center">
-            <button
-              type="button"
-              onClick={handleParse}
-              disabled={parsing || !naturalLanguage.trim() || !email.trim()}
-              className="inline-flex min-w-[260px] items-center justify-center rounded-full bg-[var(--gold)] px-8 py-4 text-base font-semibold text-slate-950 transition-transform hover:-translate-y-0.5 hover:brightness-105 disabled:cursor-not-allowed disabled:opacity-50"
-            >
-              {parsing ? "Structuring..." : "Structure Plan"}
-            </button>
-          </div>
+          <button onClick={handleParse} disabled={parsing || !text.trim() || !email.trim()}
+            className="mt-5 flex w-full items-center justify-center gap-2 rounded-xl bg-amber-500 py-4 font-black text-black hover:bg-amber-400 disabled:opacity-50">
+            {parsing ? (<><span className="h-4 w-4 animate-spin rounded-full border-2 border-black/40 border-t-black" />AI Yapılandırıyor...</>) : "✨ AI ile Yapılandır →"}
+          </button>
         </div>
       ) : (
-        <BeneficiaryPreview
-          beneficiaries={parsed}
-          depositAmount={depositAmount}
-          onEdit={resetFlow}
-          onConfirm={handleCreateVault}
-          isLoading={preparing || isConfirming}
-        />
+        <>
+          <BeneficiaryPreview beneficiaries={parsed} depositAmount={amount}
+            onEdit={() => { setStep("input"); setParseErr(""); reset(); }}
+            onConfirm={handleCreateVault} isLoading={isPending || confirming} />
+          {txError && (
+            <div className="mt-3 rounded-xl border border-red-500/30 bg-red-900/20 p-4">
+              <p className="text-sm font-bold text-red-400">İşlem Başarısız</p>
+              <p className="mt-1 text-xs text-gray-500 break-words">{txError.message.slice(0,200)}</p>
+              <button onClick={reset} className="mt-2 text-xs text-gray-500 hover:text-white">Tekrar dene</button>
+            </div>
+          )}
+        </>
       )}
     </div>
   );

@@ -1,15 +1,14 @@
 /**
- * LastKey Vault Monitor
+ * DeadDrop Vault Monitor
  * Tüm kayıtlı vault'ları tarar ve eşik kontrolü yapar.
  */
 
 const { ethers } = require("ethers");
 const { sendWarningEmail, sendExecutionEmail } = require("./emailer");
 const { triggerExecution, markWarning } = require("./executor");
-const ABI = require("../frontend/public/abi/LastKey.json");
+const ABI = require("../frontend/public/abi/DeadDrop.json");
 
-const CONTRACT_ADDRESS =
-  process.env.LASTKEY_CONTRACT_ADDRESS || process.env.DEADDROP_CONTRACT_ADDRESS;
+const CONTRACT_ADDRESS = process.env.DEADDROP_CONTRACT_ADDRESS;
 const WARNING_DAY_THRESHOLD = 293;
 const EXECUTION_DAY_THRESHOLD = 300;
 

@@ -1,12 +1,25 @@
-export const LASTKEY_ADDRESS = (
-  process.env.NEXT_PUBLIC_LASTKEY_ADDRESS ||
+export const DEADDROP_ADDRESS = (
   process.env.NEXT_PUBLIC_DEADDROP_ADDRESS ||
-  ""
+  "0x29C3B37CD735104812a8A72B9b6FeA9578e044a5"
 ) as `0x${string}`;
 
-export const LASTKEY_ABI = [
+export const DEADDROP_ABI = [
   {
     name: "createVault",
+    type: "function",
+    stateMutability: "payable",
+    inputs: [
+      { name: "_email", type: "string" },
+      { name: "_beneficiaryAddresses", type: "address[]" },
+      { name: "_percentages", type: "uint256[]" },
+      { name: "_labels", type: "string[]" },
+      { name: "_inheritancePlanRaw", type: "string" },
+      { name: "_customThresholdDays", type: "uint256" },
+    ],
+    outputs: [],
+  },
+  {
+    name: "updateVault",
     type: "function",
     stateMutability: "payable",
     inputs: [
@@ -82,12 +95,14 @@ export const LASTKEY_ABI = [
     outputs: [{ name: "", type: "uint256" }],
   },
   {
-    name: "VaultCreated",
+    name: "VaultConfigured",
     type: "event",
     inputs: [
       { name: "owner", type: "address", indexed: true },
-      { name: "threshold", type: "uint256", indexed: false },
+      { name: "thresholdDays", type: "uint256", indexed: false },
       { name: "beneficiaryCount", type: "uint256", indexed: false },
+      { name: "version", type: "uint256", indexed: false },
+      { name: "isUpdate", type: "bool", indexed: false },
       { name: "timestamp", type: "uint256", indexed: false },
     ],
   },

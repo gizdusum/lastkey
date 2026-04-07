@@ -1,13 +1,13 @@
 /**
- * LastKey NLP Parser
- * Doğal dil continuity talimatlarını OpenAI ile structured JSON'a dönüştürür.
+ * DeadDrop NLP Parser
+ * Doğal dil miras talimatlarını OpenAI ile structured JSON'a dönüştürür.
  */
 
 const OpenAI = require("openai");
 
 const SYSTEM_PROMPT = `
-You are a Web3 access continuity parser for the LastKey protocol on Etherlink (Tezos EVM).
-Your job is to parse natural language continuity instructions into structured beneficiary data.
+You are a Web3 inheritance parser for the DeadDrop protocol on Etherlink (Tezos EVM).
+Your job is to parse natural language inheritance instructions into structured beneficiary data.
 
 STRICT RULES:
 1. percentage must be in BASIS POINTS: 100% = 10000, 70% = 7000, 30% = 3000, 50% = 5000
@@ -25,7 +25,7 @@ async function parseInheritanceIntent(naturalLanguageInput) {
   if (!naturalLanguageInput || naturalLanguageInput.trim().length < 10) {
     return {
       success: false,
-      error: "Input too short. Please describe your continuity plan.",
+      error: "Input too short. Please describe your inheritance plan.",
     };
   }
 

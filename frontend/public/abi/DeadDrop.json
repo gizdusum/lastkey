@@ -61,6 +61,11 @@
       },
       {
         "type": "uint256",
+        "name": "totalBalance",
+        "indexed": false
+      },
+      {
+        "type": "uint256",
         "name": "timestamp",
         "indexed": false
       }
@@ -91,7 +96,7 @@
   {
     "type": "event",
     "anonymous": false,
-    "name": "VaultCreated",
+    "name": "VaultConfigured",
     "inputs": [
       {
         "type": "address",
@@ -100,12 +105,22 @@
       },
       {
         "type": "uint256",
-        "name": "threshold",
+        "name": "thresholdDays",
         "indexed": false
       },
       {
         "type": "uint256",
         "name": "beneficiaryCount",
+        "indexed": false
+      },
+      {
+        "type": "uint256",
+        "name": "version",
+        "indexed": false
+      },
+      {
+        "type": "bool",
+        "name": "isUpdate",
         "indexed": false
       },
       {
@@ -468,6 +483,40 @@
   },
   {
     "type": "function",
+    "name": "updateVault",
+    "constant": false,
+    "stateMutability": "payable",
+    "payable": true,
+    "inputs": [
+      {
+        "type": "string",
+        "name": "_email"
+      },
+      {
+        "type": "address[]",
+        "name": "_beneficiaryAddresses"
+      },
+      {
+        "type": "uint256[]",
+        "name": "_percentages"
+      },
+      {
+        "type": "string[]",
+        "name": "_labels"
+      },
+      {
+        "type": "string",
+        "name": "_inheritancePlanRaw"
+      },
+      {
+        "type": "uint256",
+        "name": "_customThresholdDays"
+      }
+    ],
+    "outputs": []
+  },
+  {
+    "type": "function",
     "name": "vaultBalances",
     "constant": true,
     "stateMutability": "view",
@@ -537,6 +586,10 @@
       {
         "type": "uint256",
         "name": "depositedAmount"
+      },
+      {
+        "type": "uint256",
+        "name": "version"
       }
     ]
   },

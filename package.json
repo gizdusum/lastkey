@@ -1,7 +1,7 @@
 {
-  "name": "lastkey",
+  "name": "deaddrop",
   "version": "1.0.0",
-  "description": "LastKey access continuity protocol for Etherlink",
+  "description": "DeadDrop onchain inheritance protocol for Etherlink",
   "main": "hardhat.config.js",
   "scripts": {
     "compile": "hardhat compile",

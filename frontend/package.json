@@ -1,5 +1,5 @@
 {
-  "name": "lastkey-frontend",
+  "name": "deaddrop-frontend",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -9,8 +9,6 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@rainbow-me/rainbowkit": "^2.2.8",
-    "@react-native-async-storage/async-storage": "^1.24.0",
     "@tanstack/react-query": "^5.80.7",
     "clsx": "^2.1.1",
     "ethers": "^6.16.0",

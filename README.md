@@ -38,7 +38,6 @@ This makes continuity:
 
 ## Live Deployment
 
-- **GitHub:** [github.com/gizdusum/lastkey](https://github.com/gizdusum/lastkey)
 - **Demo URL:** [lastkey.xyz](https://lastkey.xyz)
 - **Contract Address:** `0xe86D9e5029ca5fb68c133AaB98673bc370D5e04e`
 - **Explorer:** [shadownet.explorer.etherlink.com/address/0xe86D9e5029ca5fb68c133AaB98673bc370D5e04e](https://shadownet.explorer.etherlink.com/address/0xe86D9e5029ca5fb68c133AaB98673bc370D5e04e)
@@ -70,7 +69,7 @@ Verified onchain transactions:
 ## Project Structure
 
 ```text
-lastkey/
+deaddrop/
 ├── contracts/
 │   └── DeadDrop.sol
 ├── scripts/
@@ -95,7 +94,7 @@ lastkey/
 
 ## Smart Contract
 
-**DeadDrop.sol** is the currently deployed Solidity contract behind LastKey. The public product is branded as LastKey while the existing Shadownet deployment remains compatible.
+**DeadDrop.sol** is the deployed Solidity contract behind LastKey. It manages vault creation, inactivity tracking, beneficiary distribution, and agent execution.
 
 ### Core Functions
 
@@ -176,7 +175,7 @@ The frontend provides two clear states:
 ### Root Install
 
 ```bash
-cd lastkey
+cd deaddrop
 npm install
 ```
 
@@ -212,7 +211,7 @@ npm run build
 
 ```bash
 ETHERLINK_RPC_URL=https://node.shadownet.etherlink.com
-LASTKEY_CONTRACT_ADDRESS=0xe86D9e5029ca5fb68c133AaB98673bc370D5e04e
+DEADDROP_CONTRACT_ADDRESS=0xe86D9e5029ca5fb68c133AaB98673bc370D5e04e
 AGENT_ADDRESS=0xb61C1007506d31620895dfd118fa2b12CF3A2484
 AGENT_PRIVATE_KEY=0x...
 OPENAI_API_KEY=sk-...
@@ -223,7 +222,7 @@ EMAIL_APP_PASSWORD=xxxx xxxx xxxx xxxx
 ### Frontend `.env.local`
 
 ```bash
-NEXT_PUBLIC_LASTKEY_ADDRESS=0xe86D9e5029ca5fb68c133AaB98673bc370D5e04e
+NEXT_PUBLIC_DEADDROP_ADDRESS=0xe86D9e5029ca5fb68c133AaB98673bc370D5e04e
 NEXT_PUBLIC_ETHERLINK_CHAIN_ID=127823
 NEXT_PUBLIC_ETHERLINK_RPC_URL=https://node.shadownet.etherlink.com
 OPENAI_API_KEY=sk-...

@@ -1,12 +1,6 @@
 import type { Metadata } from "next";
-import { Manrope } from "next/font/google";
 import Providers from "@/components/Providers";
 import "./globals.css";
-
-const manrope = Manrope({
-  subsets: ["latin"],
-  variable: "--font-manrope",
-});
 
 export const metadata: Metadata = {
   title: "LastKey — Access Continuity on Etherlink",
@@ -27,7 +21,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${manrope.variable} bg-[#06070f] text-white antialiased`}>
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&family=Space+Mono:wght@400;700&display=swap"
+          rel="stylesheet"
+        />
+      </head>
+      <body className="bg-[#04060f] text-[#eef2ff] antialiased font-['Inter',sans-serif]">
         <Providers>{children}</Providers>
       </body>
     </html>

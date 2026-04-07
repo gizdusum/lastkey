@@ -1,6 +1,7 @@
 const { expect } = require("chai");
 const { ethers } = require("hardhat");
 const { time } = require("@nomicfoundation/hardhat-network-helpers");
+const { anyValue } = require("@nomicfoundation/hardhat-chai-matchers/withArgs");
 
 describe("DeadDrop", function () {
   let contract;
@@ -8,37 +9,36 @@ describe("DeadDrop", function () {
   let agent;
   let beneficiary1;
   let beneficiary2;
+  let beneficiary3;
 
   const DAYS_300 = 300 * 24 * 60 * 60;
   const DAYS_293 = 293 * 24 * 60 * 60;
 
   beforeEach(async function () {
-    [owner, agent, beneficiary1, beneficiary2] = await ethers.getSigners();
+    [owner, agent, beneficiary1, beneficiary2, beneficiary3] = await ethers.getSigners();
     const DeadDrop = await ethers.getContractFactory("DeadDrop");
     contract = await DeadDrop.deploy(agent.address);
     await contract.waitForDeployment();
   });
 
-  it("Should deploy with correct agent address", async function () {
+  it("deploys with the correct agent", async function () {
     expect(await contract.authorizedAgent()).to.equal(agent.address);
   });
 
-  it("Should create a vault with valid parameters", async function () {
+  it("creates a vault with valid parameters", async function () {
     const depositAmount = ethers.parseEther("0.1");
 
     await expect(
-      contract
-        .connect(owner)
-        .createVault(
-          "test@example.com",
-          [beneficiary1.address, beneficiary2.address],
-          [7000, 3000],
-          ["wife", "charity"],
-          "Send 70% to wife and 30% to charity",
-          0,
-          { value: depositAmount }
-        )
-    ).to.emit(contract, "VaultCreated");
+      contract.connect(owner).createVault(
+        "test@example.com",
+        [beneficiary1.address, beneficiary2.address],
+        [7000, 3000],
+        ["wife", "charity"],
+        "Send 70% to wife and 30% to charity",
+        0,
+        { value: depositAmount }
+      )
+    ).to.emit(contract, "VaultConfigured");
 
     const status = await contract.getVaultStatus(owner.address);
     expect(status.active).to.equal(true);
@@ -46,32 +46,65 @@ describe("DeadDrop", function () {
     expect(status.vaultBalance).to.equal(depositAmount);
   });
 
-  it("Should reject invalid percentages", async function () {
+  it("updates an existing vault instead of reverting", async function () {
+    await contract.connect(owner).createVault(
+      "test@example.com",
+      [beneficiary1.address],
+      [10000],
+      ["wife"],
+      "Send all to wife",
+      0,
+      { value: ethers.parseEther("0.1") }
+    );
+
     await expect(
-      contract
-        .connect(owner)
-        .createVault(
-          "test@example.com",
-          [beneficiary1.address],
-          [5000],
-          ["wife"],
-          "Send 50% to wife",
-          0
-        )
+      contract.connect(owner).updateVault(
+        "new@example.com",
+        [beneficiary2.address, beneficiary3.address],
+        [6000, 4000],
+        ["sister", "dao"],
+        "Send 60% to sister and 40% to DAO",
+        300,
+        { value: ethers.parseEther("0.2") }
+      )
+    )
+      .to.emit(contract, "VaultConfigured")
+      .withArgs(owner.address, 300, 2, 2, true, anyValue);
+
+    const status = await contract.getVaultStatus(owner.address);
+    expect(status.active).to.equal(true);
+    expect(status.executed).to.equal(false);
+    expect(status.vaultBalance).to.equal(ethers.parseEther("0.3"));
+
+    const beneficiaries = await contract.getBeneficiaries(owner.address);
+    expect(beneficiaries.wallets[0]).to.equal(beneficiary2.address);
+    expect(beneficiaries.wallets[1]).to.equal(beneficiary3.address);
+    expect(beneficiaries.percentages[0]).to.equal(6000n);
+    expect(beneficiaries.percentages[1]).to.equal(4000n);
+  });
+
+  it("rejects invalid percentages", async function () {
+    await expect(
+      contract.connect(owner).createVault(
+        "test@example.com",
+        [beneficiary1.address],
+        [5000],
+        ["wife"],
+        "Send 50% to wife",
+        0
+      )
     ).to.be.revertedWith("DeadDrop: Percentages must sum to 100%");
   });
 
-  it("Should ping activity and reset timer", async function () {
-    await contract
-      .connect(owner)
-      .createVault(
-        "test@example.com",
-        [beneficiary1.address],
-        [10000],
-        ["wife"],
-        "Send all to wife",
-        0
-      );
+  it("pings activity and resets the timer", async function () {
+    await contract.connect(owner).createVault(
+      "test@example.com",
+      [beneficiary1.address],
+      [10000],
+      ["wife"],
+      "Send all to wife",
+      0
+    );
 
     await time.increase(100 * 24 * 60 * 60);
 
@@ -81,37 +114,33 @@ describe("DeadDrop", function () {
     expect(status.daysInactive).to.be.lessThan(2n);
   });
 
-  it("Should allow agent to issue warning after 293 days", async function () {
-    await contract
-      .connect(owner)
-      .createVault(
-        "test@example.com",
-        [beneficiary1.address],
-        [10000],
-        ["wife"],
-        "Send all to wife",
-        0
-      );
+  it("lets the agent issue warning after 293 days", async function () {
+    await contract.connect(owner).createVault(
+      "test@example.com",
+      [beneficiary1.address],
+      [10000],
+      ["wife"],
+      "Send all to wife",
+      0
+    );
 
     await time.increase(DAYS_293 + 1);
 
     await expect(contract.connect(agent).markWarningIssued(owner.address)).to.emit(contract, "WarningSent");
   });
 
-  it("Should execute inheritance after 300 days", async function () {
+  it("executes inheritance after 300 days", async function () {
     const depositAmount = ethers.parseEther("1.0");
 
-    await contract
-      .connect(owner)
-      .createVault(
-        "test@example.com",
-        [beneficiary1.address, beneficiary2.address],
-        [7000, 3000],
-        ["wife", "charity"],
-        "Send 70% to wife and 30% to charity",
-        0,
-        { value: depositAmount }
-      );
+    await contract.connect(owner).createVault(
+      "test@example.com",
+      [beneficiary1.address, beneficiary2.address],
+      [7000, 3000],
+      ["wife", "charity"],
+      "Send 70% to wife and 30% to charity",
+      0,
+      { value: depositAmount }
+    );
 
     const b1BalanceBefore = await ethers.provider.getBalance(beneficiary1.address);
     const b2BalanceBefore = await ethers.provider.getBalance(beneficiary2.address);
@@ -130,18 +159,16 @@ describe("DeadDrop", function () {
     expect(status.executed).to.equal(true);
   });
 
-  it("Should block non-agent from executing", async function () {
-    await contract
-      .connect(owner)
-      .createVault(
-        "test@example.com",
-        [beneficiary1.address],
-        [10000],
-        ["wife"],
-        "Send all to wife",
-        0,
-        { value: ethers.parseEther("0.1") }
-      );
+  it("blocks non-agent execution", async function () {
+    await contract.connect(owner).createVault(
+      "test@example.com",
+      [beneficiary1.address],
+      [10000],
+      ["wife"],
+      "Send all to wife",
+      0,
+      { value: ethers.parseEther("0.1") }
+    );
 
     await time.increase(DAYS_300 + 1);
 

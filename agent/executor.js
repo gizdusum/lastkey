@@ -1,5 +1,5 @@
 /**
- * LastKey Executor
+ * DeadDrop Executor
  * Smart contract üzerinde agent işlemlerini gönderir.
  */
 

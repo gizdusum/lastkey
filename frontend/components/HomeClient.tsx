@@ -1,293 +1,173 @@
 "use client";
 
-import Image from "next/image";
-import { useMemo, useState } from "react";
 import { useAccount } from "wagmi";
 import ConnectWallet from "@/components/ConnectWallet";
-import ContinuityForm from "@/components/IntentParserCard";
+import InheritanceForm from "@/components/IntentParserCard";
 import VaultStatus from "@/components/VaultStatusCard";
 import Footer from "@/components/Footer";
 
-type ViewMode = "home" | "vault" | "how" | "security" | "faq";
-
-const primaryCards = [
+const STEPS = [
   {
-    title: "Intent becomes structure",
-    copy: "You describe the outcome in plain language. LastKey converts that into wallets, percentages, and an exact continuity rule.",
+    step: "01",
+    title: "Describe your plan",
+    desc: "Type in plain English who gets what. No legal language.",
   },
   {
-    title: "You keep control",
-    copy: "A single check-in keeps the plan dormant. Nothing executes while you are still actively checking in.",
+    step: "02",
+    title: "AI structures it",
+    desc: "GPT-4o converts your words into verified onchain beneficiary data.",
   },
   {
-    title: "Etherlink carries it through",
-    copy: "If the continuity window expires, the contract executes the plan exactly as it was anchored.",
+    step: "03",
+    title: "Stay checked in",
+    desc: "Tap once every 300 days. Each tap resets your continuity window.",
+  },
+  {
+    step: "04",
+    title: "Automatic execution",
+    desc: "If your window expires, LastKey executes your plan on Etherlink. Exact. Permanent.",
   },
 ];
 
-const infoViews: Record<Exclude<ViewMode, "home" | "vault">, { eyebrow: string; title: string; body: string }> = {
-  how: {
-    eyebrow: "How It Works",
-    title: "A simple path from human intent to onchain execution.",
-    body:
-      "LastKey is built to feel straightforward. You connect, define who should receive assets, let AI structure the instruction, and then anchor that exact plan on Etherlink. The interface stays calm while the smart contract handles the hard guarantees underneath.",
-  },
-  security: {
-    eyebrow: "Security",
-    title: "Transparent rules, reviewable logic, no hidden black box.",
-    body:
-      "The goal is not vague automation. LastKey keeps the execution logic reviewable on Tezos EVM. AI helps structure the instruction, but the final continuity rail is explicit, inspectable, and anchored to a real contract address.",
-  },
-  faq: {
-    eyebrow: "Why LastKey",
-    title: "Built for continuity, not only for loss.",
-    body:
-      "LastKey covers broader access continuity scenarios: prolonged absence, device loss, illness, or the moment heirs need certainty. The product language stays human, but the system is still rigorous enough for an onchain workflow.",
-  },
-};
+const STATS = [
+  { value: "$140B+", tone: "text-[#4a8fe8]", label: "Assets lost annually" },
+  { value: "300", tone: "text-[#c8a96e]", label: "Day protection window" },
+  { value: "0", tone: "text-[#3fb07a]", label: "Intermediaries" },
+];
 
 export default function HomeClient() {
   const { address, isConnected } = useAccount();
-  const [view, setView] = useState<ViewMode>("home");
-
-  const shortAddress = useMemo(() => {
-    if (!address) return "";
-    return `${address.slice(0, 6)}...${address.slice(-4)}`;
-  }, [address]);
-
-  const infoView = view === "how" || view === "security" || view === "faq" ? infoViews[view] : null;
 
   return (
-    <main className="relative min-h-screen overflow-x-hidden">
-      <div className="pointer-events-none absolute inset-0">
-        <div className="absolute left-1/2 top-[-10rem] h-[30rem] w-[30rem] -translate-x-1/2 rounded-full bg-[radial-gradient(circle,rgba(117,200,255,0.16),transparent_66%)] blur-3xl" />
-        <div className="absolute right-[-8rem] top-[20rem] h-[24rem] w-[24rem] rounded-full bg-[radial-gradient(circle,rgba(243,186,77,0.14),transparent_68%)] blur-3xl" />
-      </div>
+    <main className="min-h-screen bg-transparent">
+      <nav className="sticky top-0 z-50 h-[72px] border-b border-[rgba(74,143,232,0.1)] bg-[rgba(4,6,15,0.85)] backdrop-blur-[20px]">
+        <div className="mx-auto flex h-full w-full max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center gap-4">
+            <img src="/lastkey-logo.png" alt="LastKey" className="h-9 w-auto sm:h-10" />
+          </div>
 
-      <nav className="sticky top-0 z-50 px-4 py-5 sm:px-6">
-        <div className="mx-auto flex max-w-7xl flex-col gap-4 rounded-[30px] border border-white/10 bg-[rgba(7,12,24,0.82)] px-5 py-4 shadow-[0_16px_60px_rgba(0,0,0,0.26)] backdrop-blur-2xl lg:flex-row lg:items-center lg:justify-between">
-          <button
-            type="button"
-            onClick={() => setView("home")}
-            className="flex items-center gap-4 text-left"
-          >
-            <div className="overflow-hidden rounded-[26px] border border-white/10 bg-white/95 shadow-[0_12px_40px_rgba(0,0,0,0.2)]">
-              <Image
-                src="/lastkey-logo.png"
-                alt="LastKey"
-                width={176}
-                height={88}
-                className="h-16 w-auto object-cover sm:h-20"
-                priority
-              />
-            </div>
-            <div>
-              <p className="text-[1.8rem] font-semibold tracking-tight text-white">LastKey</p>
-              <p className="text-sm text-slate-400 sm:text-base">
-                Access continuity for the people you trust most
-              </p>
-            </div>
-          </button>
-
-          <div className="flex flex-wrap items-center justify-end gap-2">
-            <button
-              type="button"
-              onClick={() => setView("home")}
-              className={`rounded-full px-4 py-2.5 text-sm transition-colors ${
-                view === "home"
-                  ? "bg-white text-slate-950"
-                  : "text-slate-300 hover:bg-white/8 hover:text-white"
-              }`}
-            >
-              Home
-            </button>
-            <button
-              type="button"
-              onClick={() => setView("how")}
-              className={`rounded-full px-4 py-2.5 text-sm transition-colors ${
-                view === "how"
-                  ? "bg-white text-slate-950"
-                  : "text-slate-300 hover:bg-white/8 hover:text-white"
-              }`}
-            >
-              How it Works
-            </button>
-            <button
-              type="button"
-              onClick={() => setView("security")}
-              className={`rounded-full px-4 py-2.5 text-sm transition-colors ${
-                view === "security"
-                  ? "bg-white text-slate-950"
-                  : "text-slate-300 hover:bg-white/8 hover:text-white"
-              }`}
-            >
-              Security
-            </button>
-            <button
-              type="button"
-              onClick={() => setView("faq")}
-              className={`rounded-full px-4 py-2.5 text-sm transition-colors ${
-                view === "faq"
-                  ? "bg-white text-slate-950"
-                  : "text-slate-300 hover:bg-white/8 hover:text-white"
-              }`}
-            >
-              Why LastKey
-            </button>
-
-            {isConnected ? (
-              <button
-                type="button"
-                onClick={() => setView("vault")}
-                className={`rounded-full px-4 py-2.5 text-sm font-medium transition-colors ${
-                  view === "vault"
-                    ? "bg-[var(--gold)] text-slate-950"
-                    : "border border-white/10 text-slate-200 hover:border-white/20 hover:bg-white/8"
-                }`}
-              >
-                Open Vault
-              </button>
-            ) : null}
-
-            <a
-              href="https://faucet.etherlink.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hidden rounded-full border border-white/10 px-4 py-2.5 text-sm text-slate-300 transition-colors hover:border-white/20 hover:bg-white/8 hover:text-white md:inline-flex"
-            >
-              Get Test XTZ
-            </a>
-
+          <div className="flex items-center gap-3">
+            <span className="hidden items-center gap-2 rounded-full border border-emerald-500/20 bg-emerald-500/10 px-3 py-1 text-xs font-medium text-emerald-300 sm:flex">
+              <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
+              Etherlink Deployed
+            </span>
             <ConnectWallet />
           </div>
         </div>
       </nav>
 
-      {view === "home" ? (
-        <section className="px-4 pb-24 pt-6 sm:px-6 sm:pt-10">
-          <div className="mx-auto max-w-7xl">
-            <div className="hero-panel rounded-[44px] px-6 py-12 sm:px-10 sm:py-16 lg:px-14">
-              <div className="mx-auto max-w-5xl text-center">
-                <div className="inline-flex rounded-full border border-white/10 bg-white/6 px-4 py-2 text-[11px] font-semibold tracking-[0.28em] text-sky-200">
-                  ACCESS CONTINUITY ON ETHERLINK
-                </div>
+      {!isConnected ? (
+        <section className="px-6 pb-24 pt-20 sm:px-8">
+          <div className="mx-auto flex max-w-6xl flex-col items-center">
+            <div className="animate-fade-up">
+              <span className="inline-flex items-center rounded-full border border-[rgba(74,143,232,0.3)] bg-[rgba(74,143,232,0.08)] px-5 py-2 text-[11px] font-semibold tracking-[0.25em] text-[var(--blue-primary)]">
+                ✦ TEZOS EVM HACKATHON 2026 ✦
+              </span>
+            </div>
 
-                <h1 className="mt-8 text-[clamp(3.6rem,8vw,7.6rem)] font-black leading-[0.86] tracking-[-0.075em] text-white">
-                  Your keys.
-                  <br />
-                  <span className="text-shimmer">Still protected when you disappear.</span>
-                </h1>
+            <div className="mt-10 max-w-5xl text-center">
+              <h1
+                className="animate-fade-up font-black tracking-[-0.05em] text-[var(--text-primary)]"
+                style={{ fontSize: "clamp(48px, 8vw, 96px)", lineHeight: 0.9 }}
+              >
+                <span className="block">Your keys.</span>
+                <span className="animate-shimmer-text block">Even when you</span>
+                <span className="animate-shimmer-text block">can&apos;t hold them.</span>
+              </h1>
 
-                <p className="mx-auto mt-7 max-w-3xl text-lg leading-8 text-slate-300">
-                  Create one continuity plan so the right wallet or heir wallets receive your
-                  assets if you ever become unreachable, lose access, or stop checking in.
+              <div className="mt-10 flex items-center justify-center gap-4 sm:gap-6">
+                <span className="h-px w-20 bg-gradient-to-r from-transparent via-[rgba(74,143,232,0.8)] to-[rgba(74,143,232,0.15)] sm:w-40" />
+                <span className="animate-reach text-xl text-[var(--gold-bright)]">✦</span>
+                <span className="h-px w-20 bg-gradient-to-r from-[rgba(200,169,110,0.15)] via-[rgba(200,169,110,0.8)] to-transparent sm:w-40" />
+              </div>
+
+              <div className="mx-auto mt-10 max-w-[520px] space-y-1 text-center text-[17px] leading-7 text-[var(--text-secondary)]">
+                <p>AI-powered access continuity protocol on Etherlink.</p>
+                <p>Set your plan once. Your assets are protected forever.</p>
+              </div>
+
+              <div className="mt-10 flex flex-col items-center gap-4">
+                <ConnectWallet large />
+                <p className="text-sm text-[var(--text-secondary)]">
+                  Powered by Etherlink (Tezos EVM) · Zero intermediaries
                 </p>
-
-                <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
-                  {!isConnected ? (
-                    <ConnectWallet large />
-                  ) : (
-                    <button
-                      type="button"
-                      onClick={() => setView("vault")}
-                      className="inline-flex min-w-[240px] items-center justify-center rounded-full bg-[var(--gold)] px-7 py-4 text-base font-semibold text-slate-950 transition-transform hover:-translate-y-0.5 hover:brightness-105"
-                    >
-                      Open Vault
-                    </button>
-                  )}
-
-                  <a
-                    href="https://shadownet.explorer.etherlink.com/address/0xe86D9e5029ca5fb68c133AaB98673bc370D5e04e"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex min-w-[240px] items-center justify-center rounded-full border border-white/12 bg-white/6 px-7 py-4 text-base font-medium text-slate-200 transition-colors hover:border-white/20 hover:bg-white/10 hover:text-white"
-                  >
-                    View Contract
-                  </a>
-                </div>
-
-                {isConnected ? (
-                  <div className="mt-5 inline-flex rounded-full border border-emerald-500/20 bg-emerald-500/10 px-4 py-2 text-sm text-emerald-300">
-                    Connected wallet: {shortAddress}
-                  </div>
-                ) : null}
               </div>
             </div>
 
-            <div className="mt-8 grid gap-5 lg:grid-cols-3">
-              {primaryCards.map((card) => (
+            <div className="mt-16 grid w-full max-w-[520px] grid-cols-1 gap-4 sm:grid-cols-3">
+              {STATS.map((item, index) => (
                 <div
-                  key={card.title}
-                  className="glass-panel rounded-[32px] p-7"
+                  key={item.label}
+                  className="glass-card animate-fade-up rounded-2xl p-5 text-center"
+                  style={{ animationDelay: `${index * 80}ms` }}
                 >
-                  <h3 className="text-2xl font-semibold text-white">{card.title}</h3>
-                  <p className="mt-4 text-sm leading-8 text-slate-300">{card.copy}</p>
+                  <p className={`text-4xl font-black ${item.tone}`}>{item.value}</p>
+                  <p className="mt-2 text-sm text-[var(--text-muted)]">{item.label}</p>
                 </div>
               ))}
             </div>
 
-            <div className="mt-8 grid gap-5 md:grid-cols-3">
-              <div className="glass-panel rounded-[30px] p-6">
-                <p className="text-5xl font-black text-white">$140B+</p>
-                <p className="mt-2 text-sm text-slate-400">Assets at risk globally</p>
-              </div>
-              <div className="glass-panel rounded-[30px] p-6">
-                <p className="text-5xl font-black text-[var(--gold)]">300</p>
-                <p className="mt-2 text-sm text-slate-400">Day continuity window</p>
-              </div>
-              <div className="glass-panel rounded-[30px] p-6">
-                <p className="text-5xl font-black text-[var(--success)]">0</p>
-                <p className="mt-2 text-sm text-slate-400">Intermediaries needed</p>
-              </div>
-            </div>
-          </div>
-        </section>
-      ) : view === "vault" ? (
-        <section className="px-4 pb-24 pt-8 sm:px-6">
-          <div className="mx-auto max-w-5xl">
-            <div className="mb-6 flex justify-center sm:justify-start">
-              <button
-                type="button"
-                onClick={() => setView("home")}
-                className="rounded-full border border-white/10 bg-white/6 px-4 py-2.5 text-sm text-slate-300 transition-colors hover:border-white/20 hover:bg-white/10 hover:text-white"
-              >
-                ← Back to Home
-              </button>
-            </div>
+            <div className="mt-24 w-full max-w-5xl">
+              <p className="text-center text-xs tracking-[0.3em] text-[var(--text-muted)]">
+                HOW IT WORKS
+              </p>
 
-            <div className="glass-panel rounded-[44px] px-5 py-6 sm:px-8 sm:py-8">
-              <div className="mx-auto max-w-3xl rounded-[32px] border border-white/10 bg-white/5 p-8 text-center">
-                <p className="text-xs font-semibold tracking-[0.3em] text-sky-200/80">
-                  LASTKEY VAULT
-                </p>
-                <h2 className="mt-4 text-[clamp(2.4rem,5vw,4.4rem)] font-black tracking-[-0.05em] text-white">
-                  One exact continuity rail.
-                </h2>
-                <p className="mx-auto mt-4 max-w-2xl text-sm leading-8 text-slate-300">
-                  This screen stays focused on your active plan, your current vault state,
-                  and one final onchain action.
-                </p>
-              </div>
+              <div className="relative mt-12">
+                <div className="absolute left-6 top-3 hidden h-[calc(100%-2rem)] border-l border-dashed border-[var(--blue-border)] md:block" />
 
-              <div className="mx-auto mt-6 max-w-3xl space-y-5">
-                <VaultStatus address={address!} />
-                <ContinuityForm address={address!} />
+                <div className="space-y-6">
+                  {STEPS.map((item, index) => {
+                    const reverse = index % 2 === 1;
+
+                    return (
+                      <div
+                        key={item.step}
+                        className={`grid items-start gap-6 md:grid-cols-[88px_minmax(0,1fr)] ${
+                          reverse ? "md:grid-cols-[minmax(0,1fr)_88px]" : ""
+                        }`}
+                      >
+                        <div className={`flex justify-center ${reverse ? "md:order-2" : ""}`}>
+                          <div className="flex h-12 w-12 items-center justify-center rounded-full border border-[var(--blue-border)] bg-[rgba(74,143,232,0.06)] font-mono text-sm font-bold text-[var(--blue-primary)]">
+                            {item.step}
+                          </div>
+                        </div>
+
+                        <div
+                          className={`glass-card rounded-3xl p-6 ${reverse ? "md:order-1 md:text-right" : ""}`}
+                        >
+                          <h3 className="text-xl font-bold text-[var(--text-primary)]">{item.title}</h3>
+                          <p className="mt-3 max-w-xl text-sm leading-7 text-[var(--text-secondary)]">
+                            {item.desc}
+                          </p>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
             </div>
           </div>
         </section>
       ) : (
-        <section className="px-4 pb-24 pt-8 sm:px-6">
-          <div className="mx-auto max-w-4xl">
-            <div className="glass-panel rounded-[40px] p-8 sm:p-10">
-              <p className="text-xs font-semibold tracking-[0.3em] text-sky-200/80">
-                {infoView?.eyebrow}
-              </p>
-              <h2 className="mt-5 text-[clamp(2.4rem,5vw,4rem)] font-black tracking-[-0.05em] text-white">
-                {infoView?.title}
-              </h2>
-              <p className="mt-6 text-base leading-9 text-slate-300">{infoView?.body}</p>
+        <section className="px-6 pb-20 pt-14 sm:px-8">
+          <div className="mx-auto max-w-5xl">
+            <div className="mb-8 flex flex-col gap-4 rounded-3xl border border-[var(--border-subtle)] bg-[rgba(255,255,255,0.02)] px-6 py-6 sm:flex-row sm:items-end sm:justify-between sm:px-8">
+              <div>
+                <h2 className="text-[28px] font-bold tracking-[-0.03em] text-[var(--text-primary)]">
+                  Your LastKey Vault
+                </h2>
+                <p className="font-mono text-sm text-[var(--text-muted)]">
+                  {address?.slice(0, 6)}...{address?.slice(-4)}
+                </p>
+              </div>
+
+              <span className="inline-flex w-fit items-center rounded-full border border-[rgba(74,143,232,0.2)] bg-[rgba(74,143,232,0.08)] px-4 py-2 text-xs font-semibold text-[var(--blue-primary)]">
+                Protected by Etherlink
+              </span>
             </div>
+
+            <VaultStatus address={address!} />
+            <InheritanceForm address={address!} />
           </div>
         </section>
       )}
