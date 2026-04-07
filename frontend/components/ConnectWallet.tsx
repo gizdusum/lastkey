@@ -78,12 +78,12 @@ export default function ConnectWallet({
 
   return (
     <div className="flex items-center gap-2">
-      <span className="rounded-full border border-[var(--border-subtle)] bg-[var(--bg-panel)] px-3 py-2 text-xs text-[var(--text-secondary)]">
-        {chain.name}
+      <span className="rounded-full border border-[var(--border-subtle)] bg-[var(--bg-panel)] px-2.5 py-2 text-[11px] text-[var(--text-secondary)]">
+        Etherlink
       </span>
       <button
         onClick={() => disconnect()}
-        className="font-mono rounded-full border border-[var(--border-subtle)] bg-[var(--bg-panel)] px-4 py-2 text-sm text-[var(--text-primary)] transition-all hover:border-[rgba(93,156,244,0.25)] hover:bg-[rgba(93,156,244,0.08)]"
+        className="font-mono rounded-full border border-[var(--border-subtle)] bg-[var(--bg-panel)] px-3 py-2 text-[13px] text-[var(--text-primary)] transition-all hover:border-[rgba(93,156,244,0.25)] hover:bg-[rgba(93,156,244,0.08)]"
         title={copy.disconnect}
       >
         {address?.slice(0, 6)}...{address?.slice(-4)}

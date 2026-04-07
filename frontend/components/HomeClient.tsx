@@ -15,10 +15,10 @@ type View = "overview" | "how" | "security" | "vault";
 const copy = {
   en: {
     nav: {
-      overview: "Overview",
-      how: "How it Works",
+      overview: "Home",
+      how: "Flow",
       security: "Security",
-      vault: "Vault Console",
+      vault: "Vault",
       deployed: "Etherlink Deployed",
       light: "Light",
       dark: "Dark",
@@ -26,8 +26,8 @@ const copy = {
     hero: {
       badge: "TEZOS EVM HACKATHON 2026",
       title1: "Built for what comes last.",
-      title2: "Your wallet shouldn't die",
-      title3: "with you.",
+      title2: "Your crypto shouldn't die with you.",
+      title3: "",
       body:
         "LastKey is an AI-powered access continuity protocol on Etherlink, designed to keep value reachable when life stops being predictable.",
       kicker:
@@ -265,7 +265,7 @@ export default function HomeClient() {
             />
             <div className="hidden md:block">
               <div className="font-display text-lg font-bold text-[var(--text-primary)]">LastKey</div>
-              <div className="text-sm text-[var(--text-secondary)]">
+              <div className="hidden text-sm text-[var(--text-secondary)] xl:block">
                 Built for what comes last.
               </div>
             </div>
@@ -277,7 +277,7 @@ export default function HomeClient() {
                 key={item.key}
                 type="button"
                 onClick={() => setView(item.key)}
-                className={`nav-link text-sm ${view === item.key ? "active" : ""}`}
+                className={`nav-link text-xs xl:text-sm ${view === item.key ? "active" : ""}`}
               >
                 {item.label}
               </button>
@@ -342,11 +342,12 @@ export default function HomeClient() {
                     <span className="section-badge">✦ {t.hero.badge} ✦</span>
 
                     <div className="space-y-5">
-                      <h1 className="section-title max-w-5xl text-[clamp(4rem,8vw,6.9rem)] leading-[0.86]">
+                      <h1 className="section-title max-w-5xl text-[clamp(4.15rem,8vw,7rem)] leading-[0.86]">
                         <span className="block">{t.hero.title1}</span>
-                        <span className="text-gradient block animate-sheen">{t.hero.title2}</span>
-                        <span className="text-gradient block animate-sheen">{t.hero.title3}</span>
                       </h1>
+                      <p className="text-gradient max-w-3xl text-[clamp(1.7rem,3vw,2.65rem)] font-semibold leading-[1.08] animate-sheen">
+                        {t.hero.title2}
+                      </p>
                       <p className="max-w-2xl text-xl leading-9 text-[var(--text-secondary)]">
                         {t.hero.body}
                       </p>
