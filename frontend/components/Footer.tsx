@@ -3,7 +3,11 @@ export default function Footer() {
     <footer className="border-t border-[var(--border-subtle)] bg-[#04060f] px-8 py-6 text-xs text-[var(--text-muted)]">
       <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 lg:flex-row">
         <div className="flex items-center gap-3">
-          <img src="/lastkey-logo-white.png" alt="LastKey" className="h-6 w-auto" />
+          <img
+            src="/lastkey-logo-white.png"
+            alt="LastKey"
+            className="h-7 w-[104px] object-cover object-center [object-position:center_68%]"
+          />
           <span>Built for Tezos EVM AI Hackathon 2026</span>
         </div>
 
@@ -25,7 +29,7 @@ export default function Footer() {
             Get Test XTZ ↗
           </a>
           <a
-            href="https://github.com/gizdusum/proveit/tree/codex/deaddrop/deaddrop"
+            href="https://github.com/gizdusum/lastkey"
             target="_blank"
             rel="noopener noreferrer"
             className="transition-colors hover:text-[var(--text-primary)]"

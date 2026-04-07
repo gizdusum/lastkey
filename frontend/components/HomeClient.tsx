@@ -43,7 +43,11 @@ export default function HomeClient() {
       <nav className="sticky top-0 z-50 h-[72px] border-b border-[rgba(74,143,232,0.1)] bg-[rgba(4,6,15,0.85)] backdrop-blur-[20px]">
         <div className="mx-auto flex h-full w-full max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
           <div className="flex items-center gap-4">
-            <img src="/lastkey-logo.png" alt="LastKey" className="h-9 w-auto sm:h-10" />
+            <img
+              src="/lastkey-logo.png"
+              alt="LastKey"
+              className="h-10 w-[148px] object-cover object-center [object-position:center_68%] sm:h-11 sm:w-[164px]"
+            />
           </div>
 
           <div className="flex items-center gap-3">
