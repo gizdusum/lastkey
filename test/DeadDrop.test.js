@@ -112,6 +112,65 @@ describe("DeadDrop", function () {
 
     const status = await contract.getVaultStatus(owner.address);
     expect(status.daysInactive).to.be.lessThan(2n);
+
+    const activity = await contract.getActivityStatus(owner.address);
+    expect(activity.lastManualCheckInTimestamp).to.be.greaterThan(0n);
+    expect(activity.lastResetMethod).to.equal(2n);
+  });
+
+  it("records detected onchain activity without resetting when not qualified", async function () {
+    await contract.connect(owner).createVault(
+      "test@example.com",
+      [beneficiary1.address],
+      [10000],
+      ["wife"],
+      "Send all to wife",
+      0
+    );
+
+    const before = await contract.getVaultStatus(owner.address);
+    await time.increase(10 * 24 * 60 * 60);
+    const latest = await time.latest();
+
+    await expect(
+      contract.connect(agent).recordDetectedActivity(owner.address, 1, latest, false)
+    ).to.emit(contract, "OnchainActivityDetected");
+
+    const afterStatus = await contract.getVaultStatus(owner.address);
+    const activity = await contract.getActivityStatus(owner.address);
+
+    expect(afterStatus.lastActivityTimestamp).to.equal(before.lastActivityTimestamp);
+    expect(activity.lastDetectedActivityTimestamp).to.equal(latest);
+    expect(activity.lastQualifiedActivityTimestamp).to.equal(0n);
+    expect(activity.lastDetectedActivityKind).to.equal(1n);
+  });
+
+  it("auto-resets the timer when qualified activity is detected", async function () {
+    await contract.connect(owner).createVault(
+      "test@example.com",
+      [beneficiary1.address],
+      [10000],
+      ["wife"],
+      "Send all to wife",
+      0
+    );
+
+    await time.increase(120 * 24 * 60 * 60);
+    const detectedAt = await time.latest();
+
+    await expect(
+      contract.connect(agent).recordDetectedActivity(owner.address, 1, detectedAt, true)
+    )
+      .to.emit(contract, "ActivityAutoReset")
+      .withArgs(owner.address, 1, detectedAt, anyValue);
+
+    const status = await contract.getVaultStatus(owner.address);
+    const activity = await contract.getActivityStatus(owner.address);
+
+    expect(status.daysInactive).to.be.lessThan(2n);
+    expect(activity.lastDetectedActivityTimestamp).to.equal(detectedAt);
+    expect(activity.lastQualifiedActivityTimestamp).to.equal(detectedAt);
+    expect(activity.lastResetMethod).to.equal(3n);
   });
 
   it("lets the agent issue warning after 293 days", async function () {

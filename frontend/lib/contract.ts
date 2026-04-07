@@ -63,6 +63,19 @@ export const DEADDROP_ABI = [
     ],
   },
   {
+    name: "getActivityStatus",
+    type: "function",
+    stateMutability: "view",
+    inputs: [{ name: "_owner", type: "address" }],
+    outputs: [
+      { name: "lastManualCheckInTimestamp", type: "uint256" },
+      { name: "lastDetectedActivityTimestamp", type: "uint256" },
+      { name: "lastQualifiedActivityTimestamp", type: "uint256" },
+      { name: "lastDetectedActivityKind", type: "uint8" },
+      { name: "lastResetMethod", type: "uint8" },
+    ],
+  },
+  {
     name: "getBeneficiaries",
     type: "function",
     stateMutability: "view",
@@ -111,6 +124,27 @@ export const DEADDROP_ABI = [
     type: "event",
     inputs: [
       { name: "owner", type: "address", indexed: true },
+      { name: "timestamp", type: "uint256", indexed: false },
+    ],
+  },
+  {
+    name: "OnchainActivityDetected",
+    type: "event",
+    inputs: [
+      { name: "owner", type: "address", indexed: true },
+      { name: "activityKind", type: "uint8", indexed: true },
+      { name: "observedTimestamp", type: "uint256", indexed: false },
+      { name: "qualifiedReset", type: "bool", indexed: false },
+      { name: "recordedAt", type: "uint256", indexed: false },
+    ],
+  },
+  {
+    name: "ActivityAutoReset",
+    type: "event",
+    inputs: [
+      { name: "owner", type: "address", indexed: true },
+      { name: "activityKind", type: "uint8", indexed: true },
+      { name: "observedTimestamp", type: "uint256", indexed: false },
       { name: "timestamp", type: "uint256", indexed: false },
     ],
   },

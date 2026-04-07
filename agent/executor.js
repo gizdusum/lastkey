@@ -5,6 +5,7 @@
 
 const GAS_LIMIT_WARNING = 100_000n;
 const GAS_LIMIT_EXECUTE = 500_000n;
+const GAS_LIMIT_ACTIVITY = 140_000n;
 
 async function markWarning(contract, ownerAddress) {
   try {
@@ -36,4 +37,25 @@ async function triggerExecution(contract, ownerAddress) {
   }
 }
 
-module.exports = { markWarning, triggerExecution };
+async function recordDetectedActivity(contract, ownerAddress, activityKind, observedTimestamp, qualifiedReset) {
+  try {
+    console.log(`    Recording detected activity for ${ownerAddress}...`);
+    const tx = await contract.recordDetectedActivity(
+      ownerAddress,
+      activityKind,
+      observedTimestamp,
+      qualifiedReset,
+      {
+        gasLimit: GAS_LIMIT_ACTIVITY,
+      }
+    );
+    const receipt = await tx.wait();
+    console.log(`    TX confirmed: ${receipt.hash}`);
+    return receipt.hash;
+  } catch (err) {
+    console.error("    ❌ recordDetectedActivity failed:", err.message);
+    return null;
+  }
+}
+
+module.exports = { markWarning, triggerExecution, recordDetectedActivity };

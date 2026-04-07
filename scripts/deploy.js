@@ -12,7 +12,7 @@ async function main() {
   }
 
   console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
-  console.log("  DeadDrop — Etherlink Deploy");
+  console.log("  LastKey — Etherlink Deploy");
   console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
   console.log(`Deployer address : ${deployer.address}`);
   console.log(`Agent address    : ${agentAddress}`);
@@ -25,7 +25,7 @@ async function main() {
     throw new Error("Deployer wallet has no XTZ. Get testnet XTZ from Etherlink faucet first.");
   }
 
-  console.log("\nDeploying DeadDrop...");
+  console.log("\nDeploying LastKey contract...");
   const DeadDrop = await ethers.getContractFactory("DeadDrop");
   const contract = await DeadDrop.deploy(agentAddress);
   await contract.waitForDeployment();
@@ -33,7 +33,7 @@ async function main() {
   const contractAddress = await contract.getAddress();
   const explorerBase = process.env.ETHERLINK_EXPLORER_URL || "https://shadownet.explorer.etherlink.com";
 
-  console.log("\n✅ DeadDrop deployed successfully!");
+  console.log("\n✅ LastKey deployed successfully!");
   console.log(`Contract address : ${contractAddress}`);
   console.log(`Explorer URL     : ${explorerBase}/address/${contractAddress}`);
 
@@ -45,6 +45,7 @@ async function main() {
   const artifact = await ethers.getContractFactory("DeadDrop");
   const abi = JSON.parse(artifact.interface.formatJson());
   fs.writeFileSync(path.join(abiDir, "DeadDrop.json"), JSON.stringify(abi, null, 2));
+  fs.writeFileSync(path.join(abiDir, "LastKey.json"), JSON.stringify(abi, null, 2));
 
   const deploymentInfo = {
     contractAddress,
@@ -59,6 +60,7 @@ async function main() {
 
   console.log("\n📁 Files saved:");
   console.log("  - frontend/public/abi/DeadDrop.json");
+  console.log("  - frontend/public/abi/LastKey.json");
   console.log("  - deployment.json");
 
   console.log("\n⚡ Next step:");

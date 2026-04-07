@@ -12,6 +12,9 @@ contract DeadDrop {
         address owner;
         string email;
         uint256 lastActivityTimestamp;
+        uint256 lastManualCheckInTimestamp;
+        uint256 lastDetectedActivityTimestamp;
+        uint256 lastQualifiedActivityTimestamp;
         uint256 inactivityThreshold;
         uint256 warningThreshold;
         bool warningIssued;
@@ -20,6 +23,8 @@ contract DeadDrop {
         string inheritancePlanRaw;
         uint256 depositedAmount;
         uint256 version;
+        uint8 lastDetectedActivityKind;
+        uint8 lastResetMethod;
     }
 
     mapping(address => Vault) public vaults;
@@ -32,6 +37,12 @@ contract DeadDrop {
 
     uint256 public constant DEFAULT_INACTIVITY_DAYS = 300;
     uint256 public constant WARNING_DAYS_BEFORE = 7;
+    uint8 public constant ACTIVITY_KIND_NONE = 0;
+    uint8 public constant ACTIVITY_KIND_SIGNED_TRANSACTION = 1;
+    uint8 public constant RESET_METHOD_NONE = 0;
+    uint8 public constant RESET_METHOD_CONFIGURED = 1;
+    uint8 public constant RESET_METHOD_MANUAL = 2;
+    uint8 public constant RESET_METHOD_AGENT = 3;
 
     event VaultConfigured(
         address indexed owner,
@@ -42,6 +53,19 @@ contract DeadDrop {
         uint256 timestamp
     );
     event ActivityPinged(address indexed owner, uint256 timestamp);
+    event OnchainActivityDetected(
+        address indexed owner,
+        uint8 indexed activityKind,
+        uint256 observedTimestamp,
+        bool qualifiedReset,
+        uint256 recordedAt
+    );
+    event ActivityAutoReset(
+        address indexed owner,
+        uint8 indexed activityKind,
+        uint256 observedTimestamp,
+        uint256 timestamp
+    );
     event WarningSent(address indexed owner, uint256 daysInactive, uint256 timestamp);
     event InheritanceExecuted(address indexed owner, uint256 totalAmount, uint256 timestamp);
     event FundsDeposited(address indexed owner, uint256 amount, uint256 totalBalance, uint256 timestamp);
@@ -109,8 +133,49 @@ contract DeadDrop {
 
     function pingActivity() external vaultExists(msg.sender) notExecuted(msg.sender) {
         vaults[msg.sender].lastActivityTimestamp = block.timestamp;
+        vaults[msg.sender].lastManualCheckInTimestamp = block.timestamp;
         vaults[msg.sender].warningIssued = false;
+        vaults[msg.sender].lastResetMethod = RESET_METHOD_MANUAL;
         emit ActivityPinged(msg.sender, block.timestamp);
+    }
+
+    function recordDetectedActivity(
+        address _owner,
+        uint8 _activityKind,
+        uint256 _observedTimestamp,
+        bool _qualifiedReset
+    ) external onlyAgent vaultExists(_owner) notExecuted(_owner) {
+        require(
+            _activityKind == ACTIVITY_KIND_SIGNED_TRANSACTION,
+            "DeadDrop: Unsupported activity kind"
+        );
+        require(_observedTimestamp > 0, "DeadDrop: Invalid timestamp");
+        require(_observedTimestamp <= block.timestamp, "DeadDrop: Future timestamp");
+
+        Vault storage vault = vaults[_owner];
+        bool qualifiedResetApplied = false;
+
+        if (_observedTimestamp > vault.lastDetectedActivityTimestamp) {
+            vault.lastDetectedActivityTimestamp = _observedTimestamp;
+            vault.lastDetectedActivityKind = _activityKind;
+        }
+
+        if (_qualifiedReset && _observedTimestamp > vault.lastActivityTimestamp) {
+            vault.lastActivityTimestamp = _observedTimestamp;
+            vault.lastQualifiedActivityTimestamp = _observedTimestamp;
+            vault.warningIssued = false;
+            vault.lastResetMethod = RESET_METHOD_AGENT;
+            qualifiedResetApplied = true;
+            emit ActivityAutoReset(_owner, _activityKind, _observedTimestamp, block.timestamp);
+        }
+
+        emit OnchainActivityDetected(
+            _owner,
+            _activityKind,
+            _observedTimestamp,
+            qualifiedResetApplied,
+            block.timestamp
+        );
     }
 
     function markWarningIssued(address _owner) external onlyAgent vaultExists(_owner) notExecuted(_owner) {
@@ -227,6 +292,29 @@ contract DeadDrop {
         return vaults[_owner].inheritancePlanRaw;
     }
 
+    function getActivityStatus(
+        address _owner
+    )
+        external
+        view
+        returns (
+            uint256 lastManualCheckInTimestamp,
+            uint256 lastDetectedActivityTimestamp,
+            uint256 lastQualifiedActivityTimestamp,
+            uint8 lastDetectedActivityKind,
+            uint8 lastResetMethod
+        )
+    {
+        Vault storage vault = vaults[_owner];
+        return (
+            vault.lastManualCheckInTimestamp,
+            vault.lastDetectedActivityTimestamp,
+            vault.lastQualifiedActivityTimestamp,
+            vault.lastDetectedActivityKind,
+            vault.lastResetMethod
+        );
+    }
+
     function getVaultEmail(address _owner) external view onlyAgent returns (string memory) {
         return vaults[_owner].email;
     }
@@ -298,6 +386,9 @@ contract DeadDrop {
             owner: _owner,
             email: _email,
             lastActivityTimestamp: block.timestamp,
+            lastManualCheckInTimestamp: block.timestamp,
+            lastDetectedActivityTimestamp: 0,
+            lastQualifiedActivityTimestamp: 0,
             inactivityThreshold: thresholdDays * 1 days,
             warningThreshold: (thresholdDays - WARNING_DAYS_BEFORE) * 1 days,
             warningIssued: false,
@@ -305,7 +396,9 @@ contract DeadDrop {
             active: true,
             inheritancePlanRaw: _inheritancePlanRaw,
             depositedAmount: vaultBalances[_owner] + _incomingValue,
-            version: nextVersion
+            version: nextVersion,
+            lastDetectedActivityKind: ACTIVITY_KIND_NONE,
+            lastResetMethod: RESET_METHOD_CONFIGURED
         });
 
         vaultBalances[_owner] += _incomingValue;

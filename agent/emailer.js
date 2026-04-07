@@ -1,5 +1,5 @@
 /**
- * DeadDrop Emailer
+ * LastKey Emailer
  * Nodemailer + Gmail SMTP ile bildirim e-postaları gönderir.
  */
 
@@ -30,7 +30,7 @@ async function sendWarningEmail({ to, ownerAddress, daysInactive, daysRemaining 
     return;
   }
 
-  const frontendUrl = process.env.FRONTEND_URL || "https://deaddrop.vercel.app";
+  const frontendUrl = process.env.FRONTEND_URL || "https://lastkey-theta.vercel.app";
   const explorerUrl = `${process.env.ETHERLINK_EXPLORER_URL || "https://shadownet.explorer.etherlink.com"}/address/${ownerAddress}`;
 
   const html = `
@@ -56,11 +56,11 @@ async function sendWarningEmail({ to, ownerAddress, daysInactive, daysRemaining 
 <body>
     <div class="container">
         <div class="header">
-            <p class="title">⚠️ DeadDrop Warning</p>
-            <p class="subtitle">ETHERLINK INHERITANCE PROTOCOL</p>
+            <p class="title">⚠️ LastKey Alert</p>
+            <p class="subtitle">ETHERLINK ACCESS CONTINUITY</p>
         </div>
 
-        <p>Your DeadDrop vault has been inactive for <strong style="color: #ff8800">${daysInactive} days</strong>.</p>
+        <p>Your LastKey vault has been inactive for <strong style="color: #ff8800">${daysInactive} days</strong>.</p>
 
         <div class="stats">
             <div class="stat">
@@ -78,10 +78,10 @@ async function sendWarningEmail({ to, ownerAddress, daysInactive, daysRemaining 
         </div>
 
         <p style="color: #ff4444; font-weight: bold;">
-            If you do not respond within ${daysRemaining} days, your inheritance plan will be automatically executed on Etherlink.
+            If you do not respond within ${daysRemaining} days, your continuity plan can be executed automatically on Etherlink.
         </p>
 
-        <a href="${frontendUrl}" class="cta">💚 I'm Alive — Reset My Timer</a>
+        <a href="${frontendUrl}" class="cta">🔑 I'm Still Here — Reset My Timer</a>
 
         <p style="color: #888; font-size: 13px;">Your vault address:</p>
         <div class="address">${ownerAddress}</div>
@@ -91,7 +91,7 @@ async function sendWarningEmail({ to, ownerAddress, daysInactive, daysRemaining 
         </p>
 
         <div class="footer">
-            <p>This message was sent by the DeadDrop AI Agent monitoring your Etherlink vault.</p>
+            <p>This message was sent by the LastKey monitoring agent watching your Etherlink vault.</p>
             <p>This warning has been recorded onchain for full transparency.</p>
         </div>
     </div>
@@ -100,9 +100,9 @@ async function sendWarningEmail({ to, ownerAddress, daysInactive, daysRemaining 
     `;
 
   await createTransporter().sendMail({
-    from: `"DeadDrop Protocol" <${process.env.EMAIL_USER}>`,
+    from: `"LastKey Protocol" <${process.env.EMAIL_USER}>`,
     to,
-    subject: `⚠️ DeadDrop: Your vault has been inactive for ${daysInactive} days — ${daysRemaining} days remaining`,
+    subject: `⚠️ LastKey: Your vault has been inactive for ${daysInactive} days — ${daysRemaining} days remaining`,
     html,
   });
 
@@ -149,8 +149,8 @@ async function sendExecutionEmail({ to, ownerAddress, txHash, wallets, percentag
 </head>
 <body>
     <div class="container">
-        <h1 style="color: #ff4444;">🔴 Inheritance Executed</h1>
-        <p>The DeadDrop inheritance protocol has been executed for vault:</p>
+        <h1 style="color: #ff4444;">🔴 Continuity Plan Executed</h1>
+        <p>The LastKey continuity protocol has been executed for vault:</p>
         <p style="font-family: monospace; font-size: 12px; color: #888; background: #0a0a1a; padding: 12px; border-radius: 8px;">${ownerAddress}</p>
 
         <p>Total distributed: <strong style="color: #00bfff;">${totalAmount} XTZ</strong></p>
@@ -173,7 +173,7 @@ async function sendExecutionEmail({ to, ownerAddress, txHash, wallets, percentag
         </p>
 
         <p style="color: #444; font-size: 11px; margin-top: 32px; border-top: 1px solid #222; padding-top: 16px;">
-            This message was sent by the DeadDrop AI Agent. The inheritance has been permanently recorded on Etherlink.
+            This message was sent by the LastKey monitoring agent. The execution has been permanently recorded on Etherlink.
         </p>
     </div>
 </body>
@@ -181,9 +181,9 @@ async function sendExecutionEmail({ to, ownerAddress, txHash, wallets, percentag
     `;
 
   await createTransporter().sendMail({
-    from: `"DeadDrop Protocol" <${process.env.EMAIL_USER}>`,
+    from: `"LastKey Protocol" <${process.env.EMAIL_USER}>`,
     to,
-    subject: `🔴 DeadDrop: Inheritance Executed on Etherlink — ${totalAmount} XTZ Distributed`,
+    subject: `🔴 LastKey: Continuity Plan Executed on Etherlink — ${totalAmount} XTZ Distributed`,
     html,
   });
 

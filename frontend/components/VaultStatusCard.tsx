@@ -32,6 +32,14 @@ export default function VaultStatus({ address, language = "en" }: VaultStatusPro
     query: { enabled: !!status?.[0] },
   });
 
+  const { data: activityStatus } = useReadContract({
+    address: DEADDROP_ADDRESS,
+    abi: DEADDROP_ABI,
+    functionName: "getActivityStatus",
+    args: [address as `0x${string}`],
+    query: { enabled: !!status?.[0], refetchInterval: 15000 },
+  });
+
   const copy = {
     en: {
       noVault: "No vault found for this wallet.",
@@ -47,6 +55,16 @@ export default function VaultStatus({ address, language = "en" }: VaultStatusPro
       lastActivity: "Last activity",
       execution: "to execution",
       section: "Beneficiaries",
+      manual: "Manual check-in",
+      detected: "Detected onchain",
+      autoReset: "Qualified reset",
+      noneYet: "Not yet",
+      signedTx: "Signed tx detected",
+      resetConfigured: "Vault configured",
+      resetManual: "Manual check-in",
+      resetAgent: "Auto-reset by agent",
+      resetNone: "No reset source",
+      activityRail: "Activity rail",
     },
     tr: {
       noVault: "Bu cüzdan için vault bulunamadı.",
@@ -62,6 +80,16 @@ export default function VaultStatus({ address, language = "en" }: VaultStatusPro
       lastActivity: "Son aktivite",
       execution: "icraya",
       section: "Mirasçılar",
+      manual: "Manuel check-in",
+      detected: "Zincirde algılandı",
+      autoReset: "Qualified reset",
+      noneYet: "Henüz yok",
+      signedTx: "İmzalı işlem algılandı",
+      resetConfigured: "Vault oluşturuldu",
+      resetManual: "Manuel check-in",
+      resetAgent: "Agent auto-reset",
+      resetNone: "Reset kaynağı yok",
+      activityRail: "Aktivite rayı",
     },
   }[language];
 
@@ -105,9 +133,34 @@ export default function VaultStatus({ address, language = "en" }: VaultStatusPro
   const beneWallets = beneficiaries?.[0] ?? [];
   const benePercentages = beneficiaries?.[1] ?? [];
   const beneLabels = beneficiaries?.[2] ?? [];
+  const [
+    lastManualCheckInTimestamp = 0n,
+    lastDetectedActivityTimestamp = 0n,
+    lastQualifiedActivityTimestamp = 0n,
+    lastDetectedActivityKind = 0,
+    lastResetMethod = 0,
+  ] = activityStatus ?? [];
 
   const urgencyTone =
     remaining <= 7 ? "text-[var(--danger)]" : remaining <= 30 ? "text-[var(--warning)]" : "text-[var(--gold-strong)]";
+
+  const activityCards = [
+    {
+      label: copy.manual,
+      value: formatRelativeTimestamp(lastManualCheckInTimestamp, copy.noneYet),
+      hint: copy.resetManual,
+    },
+    {
+      label: copy.detected,
+      value: formatRelativeTimestamp(lastDetectedActivityTimestamp, copy.noneYet),
+      hint: getActivityKindLabel(lastDetectedActivityKind, copy),
+    },
+    {
+      label: copy.autoReset,
+      value: formatRelativeTimestamp(lastQualifiedActivityTimestamp, copy.noneYet),
+      hint: getResetMethodLabel(lastResetMethod, copy),
+    },
+  ];
 
   return (
     <div className="panel rounded-[30px] p-7">
@@ -175,6 +228,21 @@ export default function VaultStatus({ address, language = "en" }: VaultStatusPro
         </div>
       </div>
 
+      <div className="mt-7">
+        <p className="eyebrow">{copy.activityRail}</p>
+        <div className="mt-4 grid grid-cols-1 gap-3 lg:grid-cols-3">
+          {activityCards.map((card) => (
+            <div key={card.label} className="panel-soft rounded-[22px] px-4 py-4">
+              <div className="font-mono text-[10px] uppercase tracking-[0.24em] text-[var(--text-muted)]">
+                {card.label}
+              </div>
+              <div className="mt-3 text-lg font-semibold text-[var(--text-primary)]">{card.value}</div>
+              <div className="mt-2 text-xs text-[var(--text-secondary)]">{card.hint}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+
       {beneWallets.length > 0 ? (
         <div className="mt-7">
           <p className="eyebrow">{copy.section}</p>
@@ -209,4 +277,35 @@ export default function VaultStatus({ address, language = "en" }: VaultStatusPro
       {!executed ? <div className="mt-7"><ActivityPing language={language} /></div> : null}
     </div>
   );
+}
+
+function formatRelativeTimestamp(value: bigint | number, fallback: string) {
+  const raw = Number(value);
+  if (!raw) return fallback;
+
+  const diffSeconds = Math.max(0, Math.floor(Date.now() / 1000) - raw);
+  const diffDays = Math.floor(diffSeconds / 86400);
+  const diffHours = Math.floor(diffSeconds / 3600);
+
+  if (diffDays > 0) return `${diffDays}d ago`;
+  if (diffHours > 0) return `${diffHours}h ago`;
+  if (diffSeconds > 60) return `${Math.floor(diffSeconds / 60)}m ago`;
+  return "just now";
+}
+
+function getActivityKindLabel(kind: bigint | number, copy: Record<string, string>) {
+  return Number(kind) === 1 ? copy.signedTx : copy.noneYet;
+}
+
+function getResetMethodLabel(method: bigint | number, copy: Record<string, string>) {
+  switch (Number(method)) {
+    case 1:
+      return copy.resetConfigured;
+    case 2:
+      return copy.resetManual;
+    case 3:
+      return copy.resetAgent;
+    default:
+      return copy.resetNone;
+  }
 }

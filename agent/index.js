@@ -1,5 +1,5 @@
 /**
- * DeadDrop AI Agent — Ana Giriş Noktası
+ * LastKey AI Agent — Ana Giriş Noktası
  *
  * Her 24 saatte bir tüm kayıtlı vault'ları Etherlink üzerinde tarar.
  * Eşiğe göre warning e-postası gönderir veya kalıtım kontratını tetikler.
@@ -23,6 +23,8 @@ const OPTIONAL_ENV = [
   "OPENAI_API_KEY",
   "EMAIL_USER",
   "EMAIL_APP_PASSWORD",
+  "FRONTEND_URL",
+  "ETHERLINK_EXPLORER_URL",
 ];
 
 const missingRequiredEnv = REQUIRED_ENV.filter((key) => !process.env[key]);
@@ -47,7 +49,7 @@ async function startup() {
   const balance = await provider.getBalance(agentWallet.address);
 
   console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
-  console.log("  ⚰️  DeadDrop AI Agent — ONLINE");
+  console.log("  🔑  LastKey AI Agent — ONLINE");
   console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
   console.log(`Network  : ${network.name || "unknown"} (chainId: ${network.chainId})`);
   console.log(`Agent    : ${agentWallet.address}`);
@@ -69,9 +71,11 @@ async function runCycle() {
     const result = await checkAllVaults(agentWallet);
     console.log(`[${timestamp}] Cycle complete.`);
     console.log(`  Total vaults   : ${result.total}`);
-    console.log(`  Warnings sent  : ${result.warningsSent}`);
-    console.log(`  Executions     : ${result.executions}`);
-    console.log(`  Errors         : ${result.errors}`);
+        console.log(`  Warnings sent  : ${result.warningsSent}`);
+        console.log(`  Executions     : ${result.executions}`);
+        console.log(`  Activities     : ${result.activitiesDetected}`);
+        console.log(`  Auto resets    : ${result.autoResets}`);
+        console.log(`  Errors         : ${result.errors}`);
   } catch (err) {
     console.error(`[${timestamp}] Cycle failed:`, err.message);
   }
