@@ -17,7 +17,7 @@ export default function Footer({
       faucet: "Get Faucet XTZ ↗",
       github: "GitHub ↗",
       x: "X ↗",
-      powered: "Secured by Etherlink · Guided by GPT-4o",
+      powered: "Secured by Etherlink",
     },
     tr: {
       built: "Gizdusum tarafından Tezos EVM AI Hackathon 2026 için geliştirildi",
@@ -25,7 +25,7 @@ export default function Footer({
       faucet: "Faucet XTZ Al ↗",
       github: "GitHub ↗",
       x: "X ↗",
-      powered: "Etherlink ile güvence altında · GPT-4o ile desteklenir",
+      powered: "Etherlink ile güvence altında",
     },
   }[language];
 
