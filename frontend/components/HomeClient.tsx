@@ -26,7 +26,7 @@ const copy = {
     hero: {
       badge: "TEZOS EVM HACKATHON 2026",
       title1: "Built for what comes __LAST__.",
-      title2: "Your crypto shouldn't die with you.",
+      title2: "Your assets shouldn't die with you.",
       title3: "",
       body:
         "AI-powered access continuity on Etherlink.",
