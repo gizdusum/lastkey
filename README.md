@@ -1,10 +1,17 @@
 # 🔑 LastKey
 
-> AI-powered access continuity on Etherlink (Tezos EVM)
+> Access continuity on Etherlink (Tezos EVM)
 
 Copyright (c) 2026 Gizdusum. Licensed under Apache-2.0.
 
-**Built for the [Tezos EVM AI Hackathon](https://tezosevm.nowmedia.co) · April 2026**
+**Built for the [Tezos EVM Hackathon](https://tezosevm.nowmedia.co) · April 2026**
+
+---
+
+## Team
+
+- **Team name:** Gizdusum
+- **Project:** LastKey
 
 ---
 
@@ -14,7 +21,7 @@ Over **$140 billion** in crypto is effectively inaccessible because self-custodi
 
 ## The Solution
 
-LastKey lets a user describe an access continuity plan in plain English. AI structures that plan into validated beneficiary data, the plan is anchored on Etherlink, and a monitoring agent tracks long-term inactivity. If the wallet remains unchecked for **300 days**, the smart contract can execute the distribution exactly as defined.
+LastKey lets a user describe an access continuity plan in plain English. The parser turns that plan into validated beneficiary data, the plan is anchored on Etherlink, and a monitoring agent tracks long-term inactivity. If the wallet remains unchecked for **300 days**, the smart contract can execute the distribution exactly as defined.
 
 This makes continuity:
 
@@ -29,7 +36,7 @@ This makes continuity:
 1. **Connect wallet** on Etherlink Shadownet
 2. **Write your plan** in natural language:
    `If I'm unreachable for 300 days, send 70% to my family and 30% to my foundation`
-3. **AI structures it** into validated beneficiaries using OpenAI GPT-4o-mini
+3. **Structure the plan** into validated beneficiaries
 4. **Create vault** onchain with Etherlink smart contract rules + initial XTZ balance
 5. **Agent monitors** all vaults every 24 hours
 6. **Day 293** — alert email is sent and recorded onchain through `markWarningIssued()`
@@ -41,6 +48,8 @@ This makes continuity:
 ## Live Deployment
 
 - **Demo URL:** [lastkey.xyz](https://lastkey.xyz)
+- **Demo Video:** [YouTube Demo](https://www.youtube.com/watch?v=I6WIn3sLFLw)
+- **Submission Guide:** [SUBMISSION.md](./SUBMISSION.md)
 - **Contract Address:** `0xe86D9e5029ca5fb68c133AaB98673bc370D5e04e`
 - **Explorer:** [shadownet.explorer.etherlink.com/address/0xe86D9e5029ca5fb68c133AaB98673bc370D5e04e](https://shadownet.explorer.etherlink.com/address/0xe86D9e5029ca5fb68c133AaB98673bc370D5e04e)
 - **Network:** Etherlink Shadownet
@@ -60,7 +69,7 @@ Verified onchain transactions:
 |-------|-----------|
 | Blockchain | Etherlink (Tezos EVM), Chain ID `127823` |
 | Smart Contract | Solidity `^0.8.20` |
-| AI Structuring | OpenAI GPT-4o-mini |
+| Intent Parsing | Natural-language parser |
 | Monitoring Agent | Node.js + `node-cron` + `ethers` |
 | Frontend | Next.js 15 + TypeScript + Tailwind CSS |
 | Wallet Connection | wagmi v2 + injected wallets (MetaMask / Rabby) |
@@ -105,8 +114,8 @@ deaddrop/
 | `createVault()` | public | Store continuity rules + deposit XTZ |
 | `pingActivity()` | vault owner | Reset the 300-day continuity counter |
 | `depositToVault()` | vault owner | Add more XTZ to an existing vault |
-| `markWarningIssued()` | authorized AI agent | Record day-293 alert onchain |
-| `executeInheritance()` | authorized AI agent | Distribute funds after threshold |
+| `markWarningIssued()` | authorized agent | Record day-293 alert onchain |
+| `executeInheritance()` | authorized agent | Distribute funds after threshold |
 | `getVaultStatus()` | public view | Read vault health, balance, countdown |
 | `getBeneficiaries()` | public view | Read vault beneficiary configuration |
 
@@ -123,7 +132,7 @@ That keeps the product honest, demoable, and enforceable onchain.
 
 ---
 
-## AI Agent
+## Monitoring Agent
 
 The LastKey agent runs as a Node.js service and performs four jobs:
 
@@ -142,6 +151,18 @@ The same agent stack also exposes natural-language structuring logic:
 
 This is what bridges human intent to smart contract inputs.
 
+### AI Functionality
+
+LastKey uses an LLM-backed parser to transform plain-English continuity plans into structured beneficiary data that the contract can accept safely.
+
+The AI layer is responsible for:
+
+- extracting beneficiary labels, wallet addresses, and percentages from natural language
+- normalizing outputs into contract-ready arrays
+- rejecting malformed or incomplete instructions before onchain submission
+
+AI does **not** decide custody rules on its own. The user's written intent is converted into a structured proposal, then Etherlink smart contracts enforce the final outcome onchain.
+
 ---
 
 ## Frontend
@@ -158,7 +179,7 @@ The frontend provides two clear states:
 
 - wallet connection
 - natural-language continuity form
-- AI-structured preview
+- structured beneficiary preview
 - vault creation flow
 - live vault status from chain
 - `I'm Still Here` check-in action
@@ -171,7 +192,7 @@ The frontend provides two clear states:
 
 - Node.js 18+
 - funded Etherlink Shadownet wallet
-- OpenAI API key
+- parser API key
 - Gmail App Password for alert emails
 
 ### Root Install
@@ -235,17 +256,17 @@ FRONTEND_URL=http://localhost:3000
 
 ## Hackathon Fit
 
-LastKey maps directly to the Tezos EVM AI Hackathon criteria:
+LastKey maps directly to the Tezos EVM Hackathon criteria:
 
-- ✅ **AI agents interacting with smart contracts**
-  - AI structures natural language into contract-ready inputs
-  - AI monitoring agent calls contract functions autonomously
+- ✅ **Automated agents interacting with smart contracts**
+  - natural language is converted into contract-ready inputs
+  - the monitoring agent calls contract functions autonomously
 
 - ✅ **Creative application**
   - access continuity is a real, emotional, financially meaningful Web3 problem
 
 - ✅ **Ecosystem impact**
-  - proves Etherlink can host long-lived, low-cost AI-triggered automation
+  - proves Etherlink can host long-lived, low-cost automation
 
 - ✅ **Tezos EVM deployment**
   - deployed on Etherlink Shadownet with real verified transactions
