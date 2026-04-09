@@ -86,7 +86,7 @@ export async function POST(req: NextRequest) {
       const content = response.choices[0]?.message?.content?.trim();
       if (!content) {
         return NextResponse.json(
-          { success: false, error: "AI returned empty response" },
+          { success: false, error: "Parser returned empty response" },
           { status: 500 }
         );
       }
@@ -133,14 +133,14 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({
       success: true,
       beneficiaries,
-      source: process.env.OPENAI_API_KEY ? "openai" : "heuristic",
+      source: process.env.OPENAI_API_KEY ? "parser" : "heuristic",
     });
   } catch (err) {
     if (err instanceof SyntaxError) {
       return NextResponse.json(
         {
           success: false,
-          error: "Could not parse AI response. Please rephrase your plan.",
+          error: "Could not parse the structured response. Please rephrase your plan.",
         },
         { status: 422 }
       );

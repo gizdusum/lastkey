@@ -2,7 +2,7 @@
 
 ## 0:00 - 0:20 — Problem
 
-"Over 140 billion dollars in crypto is effectively at risk because Web3 has no native access continuity mechanism. LastKey solves that with AI-powered continuity on Etherlink."
+"Over 140 billion dollars in crypto is effectively at risk because Web3 has no native access continuity mechanism. LastKey solves that with programmable continuity on Etherlink."
 
 ## 0:20 - 0:40 — Landing + Wallet
 
@@ -18,22 +18,22 @@ Use demo wallet if needed:
 
 `0xb61C1007506d31620895dfd118fa2b12CF3A2484`
 
-## 0:40 - 1:15 — AI Structuring
+## 0:40 - 1:15 — Plan Structuring
 
-- Paste this prompt:
+- Paste this plan:
 
 `If I'm unreachable for 300 days, send 70% to my family at 0x70997970C51812dc3A010C7d01b50e0d17dc79C8 and 30% to my foundation at 0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC`
 
 - Add alert email
 - Keep `0.01 XTZ` as initial balance
-- Click **Structure with AI**
+- Click **Structure Plan**
 - Show the beneficiary preview:
   - family → 70%
   - foundation → 30%
 
 Explain:
 
-"OpenAI turns human intent into exact smart contract parameters. The user does not need to handcraft arrays, percentages, or basis points."
+"LastKey turns human intent into exact smart contract parameters. The user does not need to handcraft arrays, percentages, or basis points."
 
 ## 1:15 - 1:45 — Anchor Plan
 
@@ -95,4 +95,4 @@ Explain:
 
 ## 2:55 - 3:00 — Close
 
-"LastKey brings access continuity to Web3 by combining what AI does best and what blockchains do best: AI understands intent, and Etherlink enforces it onchain."
+"LastKey brings access continuity to Web3 by turning plain-English intent into enforceable onchain rules on Etherlink."

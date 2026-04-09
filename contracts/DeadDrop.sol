@@ -72,7 +72,7 @@ contract DeadDrop {
     event AgentUpdated(address indexed oldAgent, address indexed newAgent);
 
     modifier onlyAgent() {
-        require(msg.sender == authorizedAgent, "DeadDrop: Only AI agent");
+        require(msg.sender == authorizedAgent, "DeadDrop: Only authorized agent");
         _;
     }
 

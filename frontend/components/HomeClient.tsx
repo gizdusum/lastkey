@@ -29,13 +29,13 @@ const copy = {
       title2: "Your assets shouldn't die with you.",
       title3: "",
       body:
-        "AI-powered access continuity on Etherlink.",
+        "Access continuity on Etherlink.",
       kicker:
         "Set one plan. LastKey watches the signal. Etherlink enforces the rule.",
       cta: "Open Vault Console",
       ctaDisconnected: "Connect Wallet",
       secondary: "Explore How It Works",
-      powered: "Powered by Etherlink (Tezos EVM) · AI-guided · Self-custodial",
+      powered: "Powered by Etherlink (Tezos EVM) · Self-custodial",
       protocolTitle: "Protocol overview",
       protocolCopy:
         "A continuity protocol for assets that should remain reachable.",
@@ -129,7 +129,7 @@ const copy = {
       cta: "Vault Panelini Aç",
       ctaDisconnected: "Connect Wallet",
       secondary: "Nasıl Çalıştığını Gör",
-      powered: "Etherlink (Tezos EVM) ile çalışır · AI destekli · Self-custodial",
+      powered: "Etherlink (Tezos EVM) ile çalışır · Self-custodial",
       protocolTitle: "Protokol özeti",
       protocolCopy:
         "Manual recovery vaatleri yerine doğrulanabilir onchain execution isteyen kripto sahipleri için premium bir continuity rail.",
@@ -141,7 +141,7 @@ const copy = {
     },
     quick: {
       readiness: "Sistem durumu",
-      parser: "AI parser aktif",
+      parser: "Parser aktif",
       parserDesc: "Doğal dil beneficiary yapısına dönüşür.",
       contract: "Kontrat hazır",
       contractDesc: "Etherlink vault mantığı şeffaf ve denetlenebilir kalır.",
@@ -253,19 +253,14 @@ export default function HomeClient() {
       <header className="topbar">
         <div className="topbar-inner">
           <div className="brand-shell">
-            <Image
-              src={theme === "light" ? "/lastkey-logo.png" : "/lastkey-logo-white.png"}
-              alt="LastKey"
-              width={212}
-              height={64}
-              priority
-              className="h-12 w-auto rounded-2xl sm:h-14"
-            />
-            <div className="hidden md:block">
-              <div className="font-display text-lg font-bold text-[var(--text-primary)]">LastKey</div>
-              <div className="hidden text-sm text-[var(--text-secondary)] xl:block">
-                Built for what comes last.
+            <div className="brand-mark">
+              <Image src="/icon.svg" alt="LastKey mark" width={44} height={44} priority className="h-11 w-11" />
+            </div>
+            <div className="brand-copy">
+              <div className="font-display text-[1.9rem] font-bold leading-none tracking-[-0.04em] text-[var(--text-primary)]">
+                LastKey
               </div>
+              <div className="brand-kicker">Built for what comes last.</div>
             </div>
           </div>
 

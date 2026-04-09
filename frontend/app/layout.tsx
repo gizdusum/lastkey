@@ -3,13 +3,13 @@ import Providers from "@/components/Providers";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "LastKey — Access Continuity on Etherlink",
+  title: "LastKey",
   description:
-    "AI-powered crypto access continuity. Your keys, even when you can't hold them.",
+    "Built for what comes last.",
   keywords: ["web3", "crypto", "access continuity", "etherlink", "tezos", "inheritance", "lastkey"],
   openGraph: {
     title: "LastKey",
-    description: "AI-powered access continuity protocol on Etherlink",
+    description: "Built for what comes last.",
     type: "website",
   },
 };

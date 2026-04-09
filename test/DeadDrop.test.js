@@ -232,7 +232,7 @@ describe("DeadDrop", function () {
     await time.increase(DAYS_300 + 1);
 
     await expect(contract.connect(owner).executeInheritance(owner.address)).to.be.revertedWith(
-      "DeadDrop: Only AI agent"
+      "DeadDrop: Only authorized agent"
     );
   });
 });

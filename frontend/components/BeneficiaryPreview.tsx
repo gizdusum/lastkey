@@ -30,7 +30,7 @@ export default function BeneficiaryPreview({
 
   const copy = {
     en: {
-      title: "AI structured your plan",
+      title: "Structured plan preview",
       subtitle: "Review the vault route before sending an onchain transaction.",
       valid: "Valid structure",
       invalid: "Invalid structure",
@@ -44,7 +44,7 @@ export default function BeneficiaryPreview({
       anchoring: "Anchoring on Etherlink...",
     },
     tr: {
-      title: "AI planını yapılandırdı",
+      title: "Yapılandırılmış plan önizlemesi",
       subtitle: "Onchain işlemi göndermeden önce vault rotasını gözden geçir.",
       valid: "Geçerli yapı",
       invalid: "Geçersiz yapı",
@@ -63,7 +63,7 @@ export default function BeneficiaryPreview({
     <div className="panel rounded-[30px] p-6">
       <div className="mb-5 flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
         <div>
-          <p className="eyebrow">AI Preview</p>
+          <p className="eyebrow">Plan Preview</p>
           <h3 className="card-title mt-3 text-3xl">{copy.title}</h3>
           <p className="mt-2 max-w-xl text-sm leading-7 text-[var(--text-secondary)]">
             {copy.subtitle}

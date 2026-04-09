@@ -1,6 +1,6 @@
 /**
  * DeadDrop NLP Parser
- * Doğal dil miras talimatlarını OpenAI ile structured JSON'a dönüştürür.
+ * Doğal dil miras talimatlarını structured JSON'a dönüştürür.
  */
 
 const OpenAI = require("openai");
@@ -50,7 +50,7 @@ async function parseInheritanceIntent(naturalLanguageInput) {
 
     const content = response.choices[0].message.content?.trim();
     if (!content) {
-      return { success: false, error: "AI returned empty response" };
+      return { success: false, error: "Parser returned empty response" };
     }
 
     const cleaned = content.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();
@@ -85,7 +85,7 @@ async function parseInheritanceIntent(naturalLanguageInput) {
     if (err instanceof SyntaxError) {
       return {
         success: false,
-        error: "AI response was not valid JSON. Please rephrase your plan.",
+        error: "Parser response was not valid JSON. Please rephrase your plan.",
       };
     }
     return { success: false, error: err.message };

@@ -231,6 +231,25 @@ input::placeholder {
   gap: 14px;
 }
 
+.brand-mark {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 18px;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.22);
+}
+
+.brand-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.brand-kicker {
+  font-size: 0.98rem;
+  color: var(--text-secondary);
+}
+
 .nav-link {
   border-radius: 999px;
   padding: 10px 14px;
@@ -445,5 +464,13 @@ input::placeholder {
   .topbar-inner {
     flex-wrap: wrap;
     justify-content: center;
+  }
+
+  .brand-copy {
+    gap: 2px;
+  }
+
+  .brand-kicker {
+    display: none;
   }
 }
