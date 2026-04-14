@@ -48,7 +48,7 @@ This makes continuity:
 ## Live Deployment
 
 - **Demo URL:** [lastkey.xyz](https://lastkey.xyz)
-- **Demo Video:** [YouTube Demo](https://www.youtube.com/watch?v=I6WIn3sLFLw)
+- **Demo Video:** [YouTube Demo](https://www.youtube.com/watch?v=dj1-KTfWoM4&t=5s)
 - **Submission Guide:** [SUBMISSION.md](./SUBMISSION.md)
 - **Contract Address:** `0xe86D9e5029ca5fb68c133AaB98673bc370D5e04e`
 - **Explorer:** [shadownet.explorer.etherlink.com/address/0xe86D9e5029ca5fb68c133AaB98673bc370D5e04e](https://shadownet.explorer.etherlink.com/address/0xe86D9e5029ca5fb68c133AaB98673bc370D5e04e)
