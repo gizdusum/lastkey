@@ -8,11 +8,11 @@
   <key>ProgramArguments</key>
   <array>
     <string>/bin/zsh</string>
-    <string>/Users/denizalagoz/Documents/New project/lastkey/agent/run-agent.sh</string>
+    <string>/Users/gizdusum/Documents/New project/lastkey/agent/run-agent.sh</string>
   </array>
 
   <key>WorkingDirectory</key>
-  <string>/Users/denizalagoz/Documents/New project/lastkey</string>
+  <string>/Users/gizdusum/Documents/New project/lastkey</string>
 
   <key>RunAtLoad</key>
   <true/>
@@ -21,9 +21,9 @@
   <true/>
 
   <key>StandardOutPath</key>
-  <string>/Users/denizalagoz/Documents/New project/lastkey/agent/logs/launchd.out.log</string>
+  <string>/Users/gizdusum/Documents/New project/lastkey/agent/logs/launchd.out.log</string>
 
   <key>StandardErrorPath</key>
-  <string>/Users/denizalagoz/Documents/New project/lastkey/agent/logs/launchd.err.log</string>
+  <string>/Users/gizdusum/Documents/New project/lastkey/agent/logs/launchd.err.log</string>
 </dict>
 </plist>

@@ -1,7 +1,7 @@
 #!/bin/zsh
 set -euo pipefail
 
-ROOT="/Users/denizalagoz/Documents/New project/lastkey"
+ROOT="/Users/gizdusum/Documents/New project/lastkey"
 LOG_DIR="$ROOT/agent/logs"
 
 mkdir -p "$LOG_DIR"
